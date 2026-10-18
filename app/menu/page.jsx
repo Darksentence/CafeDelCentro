@@ -35,7 +35,7 @@ function DashboardContent() {
   }
 
   return (
-    <main className="min-h-screen bg-amber-50/40 p-6 md:p-10">
+    <main className="customer-order-page min-h-screen bg-amber-50/40 p-6 md:p-10">
       <div className="max-w-7xl mx-auto space-y-8">
 
         <header className="flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-amber-100 gap-4">
