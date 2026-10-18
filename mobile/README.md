@@ -37,7 +37,7 @@ Escanea el código QR con Expo Go o abre el proyecto en un emulador. Para mostra
 
 ## Dirección del servidor según el dispositivo
 
-La app lee la variable `EXPO_PUBLIC_API_BASE_URL`. Si no está definida, usa estos valores:
+La app lee la variable `EXPO_PUBLIC_API_BASE_URL`. En Expo Go conectado por la red local, intenta detectar la IP privada del equipo que sirve Expo y usarla también para la API. Si no encuentra una IP local, usa estos valores:
 
 | Entorno | Dirección predeterminada |
 | --- | --- |
@@ -60,6 +60,10 @@ La app lee la variable `EXPO_PUBLIC_API_BASE_URL`. Si no está definida, usa est
 5. Detén Expo y vuelve a ejecutar `npm run start` para que cargue la nueva configuración.
 
 No publiques ni compartas `.env.local`. Está pensado para la configuración local del dispositivo.
+
+### Si abres la app desde un Codespace
+
+El túnel de Expo solo conecta el teléfono con Metro; no hace que la API de Next.js sea accesible. Inicia Next.js en el Codespace y abre el puerto 3000 desde la pestaña **Ports**. Configura `EXPO_PUBLIC_API_BASE_URL` con la dirección HTTPS reenviada de ese puerto y añade `/api` al final. Si el proyecto ya tiene una URL pública de despliegue, también puedes usarla terminada en `/api`. Después reinicia Expo para que lea la variable. No uses `localhost` ni `10.0.2.2` en un teléfono físico.
 
 ## Pantallas
 
