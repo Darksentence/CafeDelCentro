@@ -11,7 +11,7 @@ function RootNavigator() {
     return (
       <View style={styles.loading}>
         <ActivityIndicator color={colors.coffee} size="large" />
-        <Text style={styles.loadingText}>Preparando tu cafetería</Text>
+        <Text style={styles.loadingText}>Ya casi está todo listo para ti</Text>
       </View>
     );
   }

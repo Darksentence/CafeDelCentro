@@ -32,7 +32,7 @@ function DashboardContent() {
   if (cargandoSesion || !usuario) {
     return (
       <main className="min-h-screen bg-amber-50/40 flex items-center justify-center">
-        <p className="text-amber-900 font-medium">Cargando...</p>
+        <p className="text-amber-900 font-medium">Ponemos la casa en marcha...</p>
       </main>
     );
   }
@@ -45,27 +45,27 @@ function DashboardContent() {
           <div>
             <h1 className="text-2xl md:text-3xl font-black text-amber-900">Café del Centro</h1>
             <p className="text-sm text-gray-500">
-              {esAdmin ? "Panel de administración de pedidos" : "Menú, carrito y puntos de fidelidad"}
+              {esAdmin ? "Lo que está pasando en la barra" : "Tu carta, tus pedidos y tus puntos"}
             </p>
           </div>
           <div className="flex items-center gap-3">
             <div className="text-right">
               <p className="text-sm font-semibold text-gray-800">{usuario.nombre}</p>
-              <p className="text-xs text-amber-700 capitalize">{usuario.rol}</p>
+              <p className="text-xs text-amber-700">{esAdmin ? "Equipo de la casa" : "Cliente"}</p>
             </div>
             {esAdmin && (
               <button
                 onClick={() => router.push("/dashboard")}
                 className="px-4 py-2 rounded-xl text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all"
               >
-                Reportes
+                Ver cómo va la casa
               </button>
             )}
             <button
               onClick={handleCerrarSesion}
               className="px-4 py-2 rounded-xl text-sm font-medium bg-amber-800 text-white hover:bg-amber-900 transition-all"
             >
-              Cerrar sesión
+              Salir de mi cuenta
             </button>
           </div>
         </header>
@@ -75,7 +75,7 @@ function DashboardContent() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
               <div className="lg:col-span-2 space-y-4">
-                <h2 className="text-xl font-bold text-amber-900">Menú de Bebidas</h2>
+                <h2 className="text-xl font-bold text-amber-900">¿Qué se te antoja?</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {productosVisibles.map((producto) => {
                     const tamanoActual = tamanosSeleccionados[producto.id] || "16oz";
@@ -104,10 +104,10 @@ function DashboardContent() {
                               )}
                             </div>
                           </div>
-                          <p className="text-xs text-gray-500 mt-3">Precio base (16oz): ${producto.precios["16oz"].toFixed(2)}</p>
+                          <p className="text-xs text-gray-500 mt-3">Precio para 16 oz: ${producto.precios["16oz"].toFixed(2)}</p>
 
                           <div className="mt-3">
-                            <label className="text-xs font-semibold text-gray-600 block mb-1">Elige tamaño de vaso:</label>
+                            <label className="text-xs font-semibold text-gray-600 block mb-1">¿De qué tamaño lo quieres?</label>
                             <div className="grid grid-cols-4 gap-1.5">
                               {["16oz", "20oz", "24oz", "32oz"].map((oz) => (
                                 <button
@@ -131,7 +131,7 @@ function DashboardContent() {
                             onClick={() => agregarAlCarrito(producto, tamanoActual)}
                             className="bg-amber-700 hover:bg-amber-800 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-colors shadow-sm"
                           >
-                            Añadir al Carrito
+                            Añadir a mi bolsa
                           </button>
                         </div>
                       </div>

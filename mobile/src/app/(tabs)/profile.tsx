@@ -20,9 +20,9 @@ export default function ProfileTab() {
   return (
     <Page>
       <PageHeading
-        eyebrow="TU ESPACIO"
-        title="Mi perfil"
-        subtitle="Tu cuenta y los detalles de tu visita."
+        eyebrow="TODO EN SU SITIO"
+        title="Tu cuenta"
+        subtitle="Tus datos y los puntos que has ido juntando."
       />
 
       <Surface style={styles.identity}>
@@ -40,22 +40,22 @@ export default function ProfileTab() {
 
       <Surface style={styles.points}>
         <View>
-          <Text style={styles.pointsLabel}>PUNTOS DE FIDELIDAD</Text>
+          <Text style={styles.pointsLabel}>PUNTOS QUE LLEVAS</Text>
           <Text style={styles.pointsValue}>{usuario?.puntos ?? 0}</Text>
-          <Text style={styles.pointsHint}>Suma un punto por cada dólar que disfrutas.</Text>
+          <Text style={styles.pointsHint}>Sumas uno por cada dólar de tus pedidos.</Text>
         </View>
         <Text style={styles.star}>✦</Text>
       </Surface>
 
       <View style={styles.note}>
-        <Text style={styles.noteTitle}>Un café, un buen momento.</Text>
+        <Text style={styles.noteTitle}>Nos vemos en la próxima taza.</Text>
         <Text style={styles.noteText}>
-          Gracias por ser parte de Café del Centro.
+          Gracias por pasar por Café del Centro.
         </Text>
       </View>
 
       <AppButton
-        title="Cerrar sesión"
+        title="Salir de mi cuenta"
         variant="secondary"
         onPress={logout}
       />

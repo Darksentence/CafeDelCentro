@@ -31,12 +31,12 @@ export default function RegistroPage() {
     setMensaje("");
 
     if (nombre.trim().length < 3) {
-      setMensaje("El nombre debe tener al menos 3 caracteres");
+      setMensaje("Cuéntanos tu nombre con al menos tres letras.");
       return;
     }
 
     if (password.length < 6) {
-      setMensaje("La contraseña debe tener al menos 6 caracteres");
+      setMensaje("Elige una contraseña de seis caracteres o más.");
       return;
     }
 
@@ -49,7 +49,7 @@ export default function RegistroPage() {
 
       router.push("/menu");
     } catch (error: unknown) {
-      const texto = error instanceof Error ? error.message : "Error al registrar la cuenta";
+      const texto = error instanceof Error ? error.message : "No pudimos crear tu cuenta. Inténtalo otra vez.";
       setMensaje(texto);
     } finally {
       setCargando(false);
@@ -72,7 +72,7 @@ export default function RegistroPage() {
           maxWidth: "420px",
           background: "var(--paper)",
           padding: "32px",
-          borderRadius: "16px",
+          borderRadius: "24px",
           border: "1px solid var(--line)",
           boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
         }}
@@ -82,7 +82,7 @@ export default function RegistroPage() {
         </h1>
 
         <p style={{ textAlign: "center", marginBottom: "28px", color: "var(--muted)" }}>
-          Crear una cuenta
+          Hay sitio para ti. Crea tu cuenta en un momento.
         </p>
 
         <form onSubmit={registrarUsuario}>
@@ -92,7 +92,7 @@ export default function RegistroPage() {
             type="text"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
-            placeholder="Tu nombre"
+            placeholder="¿Cómo te llamas?"
             required
             minLength={3}
             style={{
@@ -101,7 +101,7 @@ export default function RegistroPage() {
               marginTop: "6px",
               marginBottom: "18px",
               border: "1px solid var(--line)",
-              borderRadius: "8px",
+              borderRadius: "14px",
               boxSizing: "border-box",
             }}
           />
@@ -112,7 +112,7 @@ export default function RegistroPage() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="correo@ejemplo.com"
+            placeholder="tu@correo.com"
             required
             style={{
               width: "100%",
@@ -120,7 +120,7 @@ export default function RegistroPage() {
               marginTop: "6px",
               marginBottom: "18px",
               border: "1px solid var(--line)",
-              borderRadius: "8px",
+              borderRadius: "14px",
               boxSizing: "border-box",
             }}
           />
@@ -131,7 +131,7 @@ export default function RegistroPage() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Mínimo 6 caracteres"
+            placeholder="Seis caracteres o más"
             required
             minLength={6}
             style={{
@@ -140,7 +140,7 @@ export default function RegistroPage() {
               marginTop: "6px",
               marginBottom: "18px",
               border: "1px solid var(--line)",
-              borderRadius: "8px",
+              borderRadius: "14px",
               boxSizing: "border-box",
             }}
           />
@@ -158,7 +158,7 @@ export default function RegistroPage() {
               width: "100%",
               padding: "13px",
               border: "none",
-              borderRadius: "8px",
+              borderRadius: "999px",
               background: "var(--brown)",
               color: "white",
               cursor: cargando ? "not-allowed" : "pointer",
@@ -166,12 +166,12 @@ export default function RegistroPage() {
               opacity: cargando ? 0.7 : 1,
             }}
           >
-            {cargando ? "Registrando..." : "Crear cuenta"}
+            {cargando ? "Preparando tu cuenta..." : "Listo, crear cuenta"}
           </button>
         </form>
 
         <p style={{ textAlign: "center", marginTop: "22px", color: "var(--muted)" }}>
-          ¿Ya tienes una cuenta?
+          ¿Ya nos conocemos?
         </p>
 
         <button
@@ -181,13 +181,13 @@ export default function RegistroPage() {
             width: "100%",
             padding: "11px",
             border: "1px solid var(--brown)",
-            borderRadius: "8px",
+            borderRadius: "999px",
             background: "transparent",
             color: "var(--brown-dark)",
             cursor: "pointer",
           }}
         >
-          Iniciar sesión
+          Entrar a mi cuenta
         </button>
 
         <button
@@ -204,7 +204,7 @@ export default function RegistroPage() {
             fontSize: "13px",
           }}
         >
-          Volver al inicio
+          Ir al inicio
         </button>
       </div>
     </main>

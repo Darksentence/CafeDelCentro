@@ -14,4 +14,4 @@ export const colors = {
   success: "#2F765F",
 };
 
-export const radius = { card: 12, pill: 999 };
+export const radius = { card: 20, pill: 999 };

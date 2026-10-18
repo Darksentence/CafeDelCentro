@@ -38,7 +38,7 @@ export default function CartTab() {
       vaciarCarrito();
       setPedidoCreado(respuesta.pedido.id);
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "No se pudo crear el pedido.");
+      setError(cause instanceof Error ? cause.message : "No pudimos enviar el pedido. Inténtalo de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -47,20 +47,20 @@ export default function CartTab() {
   return (
     <Page>
       <PageHeading
-        eyebrow="ANTES DE DISFRUTAR"
-        title="Tu carrito"
-        subtitle="Revisa las bebidas y confirma tu pedido."
+        eyebrow="CASI ESTÁ LISTO"
+        title="Tu bolsa"
+        subtitle="Dale un último vistazo y mándanos tu pedido."
       />
 
       {pedidoCreado !== null ? (
         <Surface style={styles.confirmation}>
           <Text style={styles.confirmationMark}>✓</Text>
-          <Text style={styles.confirmationTitle}>Pedido recibido</Text>
+          <Text style={styles.confirmationTitle}>¡Ya lo tenemos!</Text>
           <Text style={styles.confirmationText}>
-            Tu pedido #{pedidoCreado} ya está en camino a la cafetería.
+            Anotamos el pedido #{pedidoCreado}. En un momento empezamos a prepararlo.
           </Text>
           <AppButton
-            title="Ver mis pedidos"
+            title="Seguir mi pedido"
             onPress={() => {
               setPedidoCreado(null);
               router.push("/orders");
@@ -70,11 +70,11 @@ export default function CartTab() {
       ) : carrito.length === 0 ? (
         <Surface style={styles.empty}>
           <Text style={styles.emptyIcon}>☕</Text>
-          <Text style={styles.emptyTitle}>Todavía no hay nada aquí</Text>
+          <Text style={styles.emptyTitle}>Tu bolsa está esperando</Text>
           <Text style={styles.emptyText}>
-            Cuando encuentres tu bebida favorita, la verás en este espacio.
+            Cuando encuentres algo que te guste, aparecerá aquí.
           </Text>
-          <AppButton title="Explorar el menú" onPress={() => router.push("/menu")} />
+          <AppButton title="Volver a la carta" onPress={() => router.push("/menu")} />
         </Surface>
       ) : (
         <>
@@ -109,16 +109,16 @@ export default function CartTab() {
 
           <Surface style={styles.summary}>
             <View style={styles.summaryLine}>
-              <Text style={styles.summaryLabel}>Subtotal</Text>
+              <Text style={styles.summaryLabel}>Tus bebidas</Text>
               <Text style={styles.summaryValue}>{"$" + total.toFixed(2)}</Text>
             </View>
             <View style={[styles.summaryLine, styles.grandTotal]}>
-              <Text style={styles.grandTotalLabel}>Total</Text>
+              <Text style={styles.grandTotalLabel}>Total del pedido</Text>
               <Text style={styles.grandTotalValue}>{"$" + total.toFixed(2)}</Text>
             </View>
             {error ? <Notice>{error}</Notice> : null}
             <AppButton
-              title="Confirmar pedido"
+              title="Enviar mi pedido"
               onPress={confirmarPedido}
               loading={loading}
             />

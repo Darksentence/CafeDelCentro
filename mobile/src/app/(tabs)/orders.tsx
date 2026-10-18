@@ -25,9 +25,9 @@ function formatDate(value: string) {
 }
 
 function statusLabel(status: string) {
-  if (status === "listo") return "Listo para recoger";
-  if (status === "entregado") return "Entregado";
-  return "En preparación";
+  if (status === "listo") return "Puedes pasar por él";
+  if (status === "entregado") return "Disfrútalo";
+  return "Lo estamos preparando";
 }
 
 export default function OrdersTab() {
@@ -46,7 +46,7 @@ export default function OrdersTab() {
         await obtenerPedidos(usuario.rol === "admin" ? undefined : usuario.id)
       );
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "No se pudieron cargar los pedidos.");
+      setError(cause instanceof Error ? cause.message : "No pudimos encontrar tus pedidos. Prueba de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -70,7 +70,7 @@ export default function OrdersTab() {
         )
       );
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "No se pudo actualizar el pedido.");
+      setError(cause instanceof Error ? cause.message : "No pudimos actualizar el pedido. Prueba otra vez.");
     } finally {
       setUpdatingId(null);
     }
@@ -79,25 +79,25 @@ export default function OrdersTab() {
   return (
     <Page>
       <PageHeading
-        eyebrow={usuario?.rol === "admin" ? "GESTIÓN DE LA CAFETERÍA" : "TU HISTORIAL"}
-        title={usuario?.rol === "admin" ? "Pedidos recibidos" : "Mis pedidos"}
+        eyebrow={usuario?.rol === "admin" ? "EN LA BARRA" : "TUS VISITAS"}
+        title={usuario?.rol === "admin" ? "Pedidos de hoy" : "Lo que has pedido"}
         subtitle={
           usuario?.rol === "admin"
-            ? "Consulta y actualiza el estado de cada orden."
-            : "Aquí puedes seguir tus pedidos recientes."
+            ? "Mira qué falta por preparar y avisa cuando esté listo."
+            : "Sigue por aquí el estado de tus pedidos recientes."
         }
       />
 
       {error ? <Notice>{error}</Notice> : null}
-      {loading ? <LoadingMessage label="Buscando tus pedidos..." /> : null}
+      {loading ? <LoadingMessage label="Buscamos tus pedidos..." /> : null}
       {!loading && !error && pedidos.length === 0 ? (
         <Surface style={styles.empty}>
           <Text style={styles.emptyIcon}>▤</Text>
-          <Text style={styles.emptyTitle}>Aún no hay pedidos</Text>
+          <Text style={styles.emptyTitle}>Todavía no hay nada por aquí</Text>
           <Text style={styles.emptyText}>
-            Cuando hagas tu primer pedido, su estado aparecerá aquí.
+            En cuanto hagas tu primer pedido, podrás seguirlo desde este espacio.
           </Text>
-          <AppButton title="Ir al menú" onPress={() => router.push("/menu")} />
+          <AppButton title="Echar un vistazo a la carta" onPress={() => router.push("/menu")} />
         </Surface>
       ) : null}
 
@@ -143,7 +143,7 @@ export default function OrdersTab() {
 
             {usuario?.rol === "admin" && pedido.estado !== "entregado" ? (
               <AppButton
-                title={pedido.estado === "pendiente" ? "Marcar listo" : "Marcar entregado"}
+                title={pedido.estado === "pendiente" ? "Avisar que está listo" : "Avisar que salió"}
                 onPress={() => avanzarEstado(pedido)}
                 loading={updatingId === pedido.id}
                 compact

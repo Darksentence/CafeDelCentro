@@ -39,7 +39,7 @@ export function Page({
 }
 
 export function CafeBrand({
-  subtitle = "ESPECIALIDAD · CALIDEZ · ENCUENTRO",
+  subtitle = "CAFÉ DE BARRIO · SAN SALVADOR",
 }: {
   subtitle?: string;
 }) {
@@ -189,7 +189,7 @@ export function Notice({
   );
 }
 
-export function LoadingMessage({ label = "Cargando..." }: { label?: string }) {
+export function LoadingMessage({ label = "Un momento..." }: { label?: string }) {
   return (
     <View style={styles.loading}>
       <ActivityIndicator color={colors.coffee} />

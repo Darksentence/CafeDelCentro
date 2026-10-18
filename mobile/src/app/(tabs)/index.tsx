@@ -12,27 +12,27 @@ export default function HomeTab() {
     <Page>
       <CafeBrand />
       <View style={styles.hero}>
-        <Text style={styles.eyebrow}>UNA PAUSA PARA TI</Text>
-        <Text style={styles.title}>Hola, {firstName}.</Text>
+        <Text style={styles.eyebrow}>QUÉ GUSTO TENERTE POR AQUÍ</Text>
+        <Text style={styles.title}>¿Qué se te antoja, {firstName}?</Text>
         <Text style={styles.body}>
-          El café sabe mejor cuando se comparte. Encuentra algo rico para este momento.
+          La próxima taza está más cerca de lo que crees. Date una vuelta por la carta.
         </Text>
         <View style={styles.illustration}>
           <View style={styles.sun} />
           <Text style={styles.cup}>☕</Text>
-          <Text style={styles.artLabel}>ORIGEN · OFICIO · ENCUENTRO</Text>
+          <Text style={styles.artLabel}>HECHO AQUÍ, PARA TI</Text>
         </View>
         <AppButton
-          title="Explorar el menú"
+          title="Ver qué hay en la carta"
           onPress={() => router.push("/menu")}
         />
       </View>
 
       <Surface style={styles.pointsCard}>
         <View>
-          <Text style={styles.pointsLabel}>TUS PUNTOS</Text>
+          <Text style={styles.pointsLabel}>LO QUE YA SUMASTE</Text>
           <Text style={styles.points}>{usuario?.puntos ?? 0}</Text>
-          <Text style={styles.pointsHelp}>Un punto por cada dólar en tus pedidos.</Text>
+          <Text style={styles.pointsHelp}>Un punto por cada dólar que disfrutas.</Text>
         </View>
         <View style={styles.pointsMark}>
           <Text style={styles.pointsCup}>✦</Text>
@@ -41,15 +41,15 @@ export default function HomeTab() {
 
       <Surface style={styles.shortcut}>
         <View style={styles.shortcutCopy}>
-          <Text style={styles.shortcutTitle}>¿Ya elegiste?</Text>
+          <Text style={styles.shortcutTitle}>Tu próxima ronda</Text>
           <Text style={styles.shortcutText}>
             {cantidadEnCarrito === 0
-              ? "Tu carrito está listo para una buena idea."
-              : "Tienes " + cantidadEnCarrito + " producto(s) en el carrito."}
+              ? "Tu bolsa está vacía, pero no por mucho tiempo."
+              : `Ya guardaste ${cantidadEnCarrito} ${cantidadEnCarrito === 1 ? "bebida" : "bebidas"} para tu próxima visita.`}
           </Text>
         </View>
         <AppButton
-          title="Ver carrito"
+          title="Ir a mi bolsa"
           variant="secondary"
           compact
           onPress={() => router.push("/cart")}

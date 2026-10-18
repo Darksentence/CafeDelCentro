@@ -9,13 +9,13 @@ export default function WelcomeScreen() {
       <CafeBrand />
 
       <View style={styles.hero}>
-        <Text style={styles.eyebrow}>CAFÉ DE ESPECIALIDAD · DESDE 2018</Text>
+        <Text style={styles.eyebrow}>UN CAFÉ QUE CAE BIEN</Text>
         <Text style={styles.title}>
-          Un buen café{"\n"}
-          <Text style={styles.titleAccent}>conecta.</Text>
+          Baja el ritmo.{"\n"}
+          <Text style={styles.titleAccent}>Pide algo rico.</Text>
         </Text>
         <Text style={styles.description}>
-          Granos seleccionados, manos expertas y un espacio para disfrutar sin prisa.
+          Tu café de siempre o algo nuevo por probar. Aquí te esperamos con algo rico y recién hecho.
         </Text>
 
         <View style={styles.art}>
@@ -23,15 +23,15 @@ export default function WelcomeScreen() {
           <View style={styles.cup}>
             <Text style={styles.cupEmoji}>☕</Text>
           </View>
-          <Text style={styles.caption}>HECHO CON TIEMPO{"\n"}Y BUEN GRANO</Text>
+          <Text style={styles.caption}>RECIÉN HECHO{"\n"}PARA DISFRUTAR</Text>
         </View>
 
         <AppButton
-          title="Iniciar sesión"
+          title="Entrar a mi cuenta"
           onPress={() => router.push("/login")}
         />
         <AppButton
-          title="Crear cuenta"
+          title="Soy nuevo por aquí"
           variant="secondary"
           onPress={() => router.push("/registro")}
         />
@@ -54,9 +54,9 @@ const styles = StyleSheet.create({
   title: {
     color: colors.ink,
     fontFamily: "serif",
-    fontSize: 50,
-    lineHeight: 53,
-    letterSpacing: -1.4,
+    fontSize: 45,
+    lineHeight: 49,
+    letterSpacing: -1.2,
   },
   titleAccent: { color: colors.coffee, fontStyle: "italic" },
   description: { maxWidth: 320, color: colors.muted, fontSize: 15, lineHeight: 23 },

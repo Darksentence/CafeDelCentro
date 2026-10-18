@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Café del Centro",
-  description: "Café de especialidad, calidez y buenos momentos.",
+  title: "Café del Centro | Una pausa en el Centro Histórico",
+  description: "Café recién hecho, algo rico para acompañar y un lugar con espacio para ti.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

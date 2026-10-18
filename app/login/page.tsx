@@ -42,7 +42,7 @@ export default function LoginPage() {
         router.push("/menu");
       }
     } catch (error: unknown) {
-      const texto = error instanceof Error ? error.message : "Error al iniciar sesión";
+      const texto = error instanceof Error ? error.message : "No pudimos entrar a tu cuenta. Inténtalo otra vez.";
       setMensaje(texto);
     } finally {
       setCargando(false);
@@ -65,7 +65,7 @@ export default function LoginPage() {
           maxWidth: "420px",
           background: "var(--paper)",
           padding: "32px",
-          borderRadius: "16px",
+          borderRadius: "24px",
           border: "1px solid var(--line)",
           boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
         }}
@@ -75,7 +75,7 @@ export default function LoginPage() {
         </h1>
 
         <p style={{ textAlign: "center", marginBottom: "28px", color: "var(--muted)" }}>
-          Iniciar sesión
+          Qué bueno que volviste. Entra para pedir algo rico.
         </p>
 
         <form onSubmit={iniciarSesion}>
@@ -85,7 +85,7 @@ export default function LoginPage() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="correo@ejemplo.com"
+            placeholder="tu@correo.com"
             required
             style={{
               width: "100%",
@@ -93,7 +93,7 @@ export default function LoginPage() {
               marginTop: "6px",
               marginBottom: "18px",
               border: "1px solid var(--line)",
-              borderRadius: "8px",
+              borderRadius: "14px",
               boxSizing: "border-box",
             }}
           />
@@ -104,7 +104,7 @@ export default function LoginPage() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="********"
+            placeholder="Escribe tu contraseña"
             required
             style={{
               width: "100%",
@@ -112,7 +112,7 @@ export default function LoginPage() {
               marginTop: "6px",
               marginBottom: "18px",
               border: "1px solid var(--line)",
-              borderRadius: "8px",
+              borderRadius: "14px",
               boxSizing: "border-box",
             }}
           />
@@ -130,7 +130,7 @@ export default function LoginPage() {
               width: "100%",
               padding: "13px",
               border: "none",
-              borderRadius: "8px",
+              borderRadius: "999px",
               background: "var(--brown)",
               color: "white",
               cursor: cargando ? "not-allowed" : "pointer",
@@ -138,12 +138,12 @@ export default function LoginPage() {
               opacity: cargando ? 0.7 : 1,
             }}
           >
-            {cargando ? "Ingresando..." : "Iniciar sesión"}
+            {cargando ? "Un momento..." : "Continuar"}
           </button>
         </form>
 
         <p style={{ textAlign: "center", marginTop: "22px", color: "var(--muted)" }}>
-          ¿No tienes una cuenta?
+          ¿Aún no tienes tu cuenta?
         </p>
 
         <button
@@ -153,13 +153,13 @@ export default function LoginPage() {
             width: "100%",
             padding: "11px",
             border: "1px solid var(--brown)",
-            borderRadius: "8px",
+            borderRadius: "999px",
             background: "transparent",
             color: "var(--brown-dark)",
             cursor: "pointer",
           }}
         >
-          Crear cuenta
+          Únete a la mesa
         </button>
 
         <button
@@ -176,7 +176,7 @@ export default function LoginPage() {
             fontSize: "13px",
           }}
         >
-          Volver al inicio
+          Ir al inicio
         </button>
       </div>
     </main>

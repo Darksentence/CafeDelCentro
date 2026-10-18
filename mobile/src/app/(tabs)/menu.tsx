@@ -13,10 +13,10 @@ import { colors, radius } from "@/theme";
 import type { Producto } from "@/types";
 
 const filters = [
-  { key: "todos", label: "Todo" },
-  { key: "clasicos", label: "Clásicos" },
-  { key: "frios", label: "Fríos" },
-  { key: "filtrados", label: "Filtrados" },
+  { key: "todos", label: "Toda la carta" },
+  { key: "clasicos", label: "De siempre" },
+  { key: "frios", label: "Con hielo" },
+  { key: "filtrados", label: "Filtrado" },
 ];
 
 export default function MenuTab() {
@@ -35,7 +35,7 @@ export default function MenuTab() {
       const data = await obtenerProductos();
       setProductos(data.filter((producto) => producto.disponible !== false));
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "No se pudo cargar el menú.");
+      setError(cause instanceof Error ? cause.message : "No pudimos traer la carta. Inténtalo de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -52,7 +52,7 @@ export default function MenuTab() {
       .catch((cause: unknown) => {
         if (active) {
           setError(
-            cause instanceof Error ? cause.message : "No se pudo cargar el menú."
+            cause instanceof Error ? cause.message : "No pudimos traer la carta. Inténtalo de nuevo."
           );
         }
       })
@@ -79,9 +79,9 @@ export default function MenuTab() {
   return (
     <Page>
       <PageHeading
-        eyebrow="PREPARADO AL MOMENTO"
-        title="Nuestro menú"
-        subtitle="Elige tu bebida, el tamaño y la preparamos para ti."
+        eyebrow="HECHO AL MOMENTO"
+        title="¿Qué se te antoja?"
+        subtitle="Escoge tu bebida y el tamaño; nosotros nos encargamos del resto."
       />
 
       <View style={styles.filters}>
@@ -107,12 +107,12 @@ export default function MenuTab() {
       {error ? (
         <View style={styles.errorBlock}>
           <Notice>{error}</Notice>
-          <AppButton title="Intentar de nuevo" variant="secondary" onPress={cargar} />
+          <AppButton title="Volver a probar" variant="secondary" onPress={cargar} />
         </View>
       ) : null}
-      {loading ? <LoadingMessage label="Cargando las bebidas..." /> : null}
+      {loading ? <LoadingMessage label="Estamos preparando la carta..." /> : null}
       {!loading && !error && visibles.length === 0 ? (
-        <Notice kind="info">No hay bebidas disponibles en esta categoría.</Notice>
+        <Notice kind="info">Por ahora no hay opciones en esta parte de la carta.</Notice>
       ) : null}
 
       {!loading &&
@@ -127,7 +127,7 @@ export default function MenuTab() {
               onSelectSize={(value) => seleccionar(producto.id, value)}
               onAdd={() => {
                 agregarAlCarrito(producto, size);
-                setNotice(producto.nombre + " se añadió al carrito.");
+                setNotice(producto.nombre + " ya está en tu bolsa.");
               }}
             />
           );

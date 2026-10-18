@@ -22,7 +22,7 @@ export default function RegisterScreen() {
       await iniciarSesionLocal(usuario);
       router.replace("/(tabs)");
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "No se pudo crear la cuenta.");
+      setError(cause instanceof Error ? cause.message : "No pudimos crear tu cuenta. Prueba de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -32,23 +32,23 @@ export default function RegisterScreen() {
     <Page safeEdges={["top", "right", "bottom", "left"]}>
       <CafeBrand />
       <View style={styles.card}>
-        <Text style={styles.eyebrow}>UN LUGAR EN LA MESA</Text>
-        <Text style={styles.title}>Crear cuenta</Text>
+        <Text style={styles.eyebrow}>HAY SITIO PARA TI</Text>
+        <Text style={styles.title}>Únete a la mesa</Text>
         <Text style={styles.subtitle}>
-          Guarda tus puntos y sigue tus pedidos desde aquí.
+          Guarda tus puntos y ten tus pedidos a la mano.
         </Text>
         <Field
           label="Nombre"
           value={nombre}
           onChangeText={setNombre}
-          placeholder="Tu nombre"
+          placeholder="¿Cómo te llamas?"
           inputProps={{ autoCapitalize: "words", textContentType: "name" }}
         />
         <Field
           label="Correo electrónico"
           value={email}
           onChangeText={setEmail}
-          placeholder="correo@ejemplo.com"
+          placeholder="tu@correo.com"
           inputProps={{
             autoCapitalize: "none",
             autoComplete: "email",
@@ -60,23 +60,23 @@ export default function RegisterScreen() {
           label="Contraseña"
           value={password}
           onChangeText={setPassword}
-          placeholder="Al menos 6 caracteres"
+          placeholder="Seis caracteres o más"
           secureTextEntry
           inputProps={{ autoComplete: "new-password", textContentType: "newPassword" }}
         />
         {error ? <Notice>{error}</Notice> : null}
         <AppButton
-          title="Crear mi cuenta"
+          title="Listo, crear cuenta"
           onPress={submit}
           loading={loading}
           disabled={!nombre.trim() || !email.trim() || password.length < 6}
         />
         <Text style={styles.helper}>
-          Al crear la cuenta podrás consultar el menú y tus pedidos.
+          Con tu cuenta podrás pedir y revisar cómo va todo.
         </Text>
       </View>
       <AppButton
-        title="Ya tengo cuenta"
+        title="Ya tengo una cuenta"
         variant="text"
         onPress={() => router.replace("/login")}
       />

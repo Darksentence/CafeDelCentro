@@ -21,7 +21,7 @@ export default function LoginScreen() {
       await iniciarSesionLocal(usuario);
       router.replace("/(tabs)");
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "No se pudo iniciar sesión.");
+      setError(cause instanceof Error ? cause.message : "No pudimos entrar a tu cuenta. Inténtalo otra vez.");
     } finally {
       setLoading(false);
     }
@@ -31,16 +31,16 @@ export default function LoginScreen() {
     <Page safeEdges={["top", "right", "bottom", "left"]}>
       <CafeBrand />
       <View style={styles.card}>
-        <Text style={styles.eyebrow}>QUÉ GUSTO VERTE</Text>
-        <Text style={styles.title}>Iniciar sesión</Text>
+        <Text style={styles.eyebrow}>QUÉ BUENO QUE VOLVISTE</Text>
+        <Text style={styles.title}>Nos alegra verte</Text>
         <Text style={styles.subtitle}>
-          Entra a tu cuenta para pedir algo rico.
+          Entra y encuentra algo rico para acompañar tu día.
         </Text>
         <Field
           label="Correo electrónico"
           value={email}
           onChangeText={setEmail}
-          placeholder="correo@ejemplo.com"
+          placeholder="tu@correo.com"
           inputProps={{
             autoCapitalize: "none",
             autoComplete: "email",
@@ -52,28 +52,28 @@ export default function LoginScreen() {
           label="Contraseña"
           value={password}
           onChangeText={setPassword}
-          placeholder="Tu contraseña"
+          placeholder="Escribe tu contraseña"
           secureTextEntry
           inputProps={{ autoComplete: "password", textContentType: "password" }}
         />
         {error ? <Notice>{error}</Notice> : null}
         <AppButton
-          title="Entrar a mi cuenta"
+          title="Continuar"
           onPress={submit}
           loading={loading}
           disabled={!email.trim() || !password}
         />
         <View style={styles.bottom}>
-          <Text style={styles.helper}>¿Todavía no tienes una cuenta?</Text>
+          <Text style={styles.helper}>¿Aún no tienes tu cuenta?</Text>
           <AppButton
-            title="Crear cuenta"
+            title="Crear una ahora"
             variant="text"
             onPress={() => router.push("/registro")}
           />
         </View>
       </View>
       <AppButton
-        title="Volver al inicio"
+        title="Volver a la portada"
         variant="text"
         onPress={() => router.replace("/")}
       />

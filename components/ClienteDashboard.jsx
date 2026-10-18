@@ -19,24 +19,24 @@ export default function ClienteDashboard() {
       {/* Widget de Puntos de Fidelidad */}
       <div className="bg-gradient-to-br from-amber-600 to-amber-800 text-white p-6 rounded-2xl shadow-lg flex flex-col justify-between">
         <div>
-          <span className="text-amber-200 text-sm font-medium uppercase tracking-wider">Fidelidad Café del Centro</span>
-          <h3 className="text-3xl font-extrabold mt-1">Tus Puntos</h3>
+          <span className="text-amber-200 text-sm font-medium uppercase tracking-wider">Un detalle de la casa</span>
+          <h3 className="text-3xl font-extrabold mt-1">Lo que llevas</h3>
         </div>
         <div className="my-6 text-center">
           <span className="text-6xl font-black">{puntosUsuario}</span>
-          <p className="text-amber-200 text-sm mt-1">¡Acumula puntos con cada compra!</p>
+          <p className="text-amber-200 text-sm mt-1">Sumas un punto por cada dólar de tu pedido.</p>
         </div>
         <div className="bg-amber-900/40 p-3 rounded-xl text-xs text-amber-100">
-          💡 Canjea tus puntos por bebidas gratis.
+          Tus puntos se convierten en algo rico para la próxima.
         </div>
       </div>
 
       {/* Historial de Pedidos */}
       <div className="md:col-span-2 bg-white p-6 rounded-2xl shadow-lg border border-amber-100">
-        <h3 className="text-xl font-bold text-amber-900 mb-4">📋 Mis Pedidos Activos e Historial</h3>
+        <h3 className="text-xl font-bold text-amber-900 mb-4">Tus pedidos</h3>
         
         {pedidos.length === 0 ? (
-          <p className="text-gray-500 text-center py-6">No tienes pedidos registrados aún.</p>
+          <p className="text-gray-500 text-center py-6">Todavía no hay pedidos. El primero aparecerá aquí.</p>
         ) : (
           <div className="space-y-4 max-h-72 overflow-y-auto pr-2">
             {pedidos.map((pedido) => (
@@ -45,7 +45,7 @@ export default function ClienteDashboard() {
                   <div className="flex items-center space-x-2">
                     <span className="font-bold text-gray-800">Pedido #{pedido.id}</span>
                     <span className={`px-2.5 py-0.5 text-xs font-semibold rounded-full border ${getEstadoBadge(pedido.estado)}`}>
-                      {pedido.estado}
+                      {pedido.estado === "pendiente" ? "Por preparar" : pedido.estado === "listo" ? "Listo para recoger" : "Entregado"}
                     </span>
                   </div>
                   <p className="text-xs text-gray-500 mt-1">

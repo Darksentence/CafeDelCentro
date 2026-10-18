@@ -8,7 +8,7 @@ type OrderItem = { nombre?: string; nombreProducto?: string; cantidad?: number; 
 type Order = { id: number; usuarioId?: number; items?: OrderItem[]; total?: number; estado?: string; fecha?: string };
 type RankingItem = { name: string; units: number; amount: number; color: string };
 
-const COLORS = ["#b77945", "#ca9a6a", "#8e9c76", "#d7b36e", "#9caeb0"];
+const COLORS = ["#E45736", "#F2C14E", "#9AB6A5", "#88AEB5", "#D9826B"];
 
 function CoffeeIcon() {
   return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 8h12v7a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5V8Z" /><path d="M17 10h2a3 3 0 0 1 0 6h-2M8 4c0 1 .7 1.3.7 2.2M12 3c0 1 .7 1.3.7 2.2" /></svg>;
@@ -39,7 +39,7 @@ export default function DashboardPage() {
   const router = useRouter();
 
   const [usuario, setUsuario] = useState<{ nombre?: string; rol?: string } | null>(null);
-  const [active, setActive] = useState("Resumen");
+  const [active, setActive] = useState("La casa");
   const [orders, setOrders] = useState<Order[]>([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
@@ -66,7 +66,7 @@ export default function DashboardPage() {
   useEffect(() => {
     obtenerPedidos()
       .then((data: Order[]) => setOrders(Array.isArray(data) ? data : []))
-      .catch((e: Error) => setError(e.message || "No se pudieron cargar los pedidos"))
+      .catch((e: Error) => setError(e.message || "No pudimos cargar los pedidos. Inténtalo de nuevo."))
       .finally(() => setCargando(false));
   }, []);
 
@@ -147,26 +147,26 @@ export default function DashboardPage() {
   return (
     <main className="dashboard-shell">
       <aside className="dashboard-sidebar">
-        <a className="dashboard-brand" href="/"><span><CoffeeIcon /></span><strong>Café del Centro</strong><small>Panel administrativo</small></a>
-        <div className="dashboard-menu-label">MENÚ PRINCIPAL</div>
+        <a className="dashboard-brand" href="/"><span><CoffeeIcon /></span><strong>Café del Centro</strong><small>Gestión de la casa</small></a>
+        <div className="dashboard-menu-label">EL DÍA A DÍA</div>
         <nav className="dashboard-nav" aria-label="Navegación del panel">
-          <button className={active === "Resumen" ? "active" : ""} onClick={() => setActive("Resumen")}><DashboardIcon type="overview" /><span>Resumen</span></button>
+          <button className={active === "La casa" ? "active" : ""} onClick={() => setActive("La casa")}><DashboardIcon type="overview" /><span>La casa</span></button>
           <button onClick={() => router.push("/menu")}><DashboardIcon type="orders" /><span>Pedidos</span>{pendientes > 0 && <b>{pendientes}</b>}</button>
-          <button onClick={() => showNotice("Catálogo: módulo en desarrollo")}><DashboardIcon type="products" /><span>Productos</span></button>
+          <button onClick={() => showNotice("La carta de productos estará disponible más adelante.")}><DashboardIcon type="products" /><span>La carta</span></button>
         </nav>
-        <div className="dashboard-menu-label dashboard-report-label">REPORTES</div>
-        <button className={`dashboard-nav-single ${active === "Analítica" ? "active" : ""}`} onClick={() => setActive("Analítica")}><DashboardIcon type="chart" /><span>Analítica</span></button>
+        <div className="dashboard-menu-label dashboard-report-label">NÚMEROS</div>
+        <button className={`dashboard-nav-single ${active === "Tendencias" ? "active" : ""}`} onClick={() => setActive("Tendencias")}><DashboardIcon type="chart" /><span>Tendencias</span></button>
         <div className="dashboard-sidebar-bottom">
-          <button className="dashboard-nav-single" onClick={cerrarSesion}><DashboardIcon type="settings" /><span>Cerrar sesión</span></button>
+          <button className="dashboard-nav-single" onClick={cerrarSesion}><DashboardIcon type="settings" /><span>Salir de mi cuenta</span></button>
           <div className="dashboard-user"><span>{iniciales}</span><div><strong>{usuario.nombre}</strong><small>Administrador</small></div></div>
         </div>
       </aside>
 
       <section className="dashboard-main">
         <header className="dashboard-topbar">
-          <div className="dashboard-breadcrumb"><span>Dashboard</span><i>/</i><strong>{active}</strong></div>
+            <div className="dashboard-breadcrumb"><span>La cafetería</span><i>/</i><strong>{active}</strong></div>
           <div className="dashboard-top-actions">
-            <span className="dashboard-updated"><i /> {cargando ? "Cargando datos..." : `${totalOrders} pedidos registrados`}</span>
+            <span className="dashboard-updated"><i /> {cargando ? "Ponemos todo en su sitio..." : `${totalOrders} pedidos en la casa`}</span>
             <span className="dashboard-top-avatar">{iniciales}</span>
           </div>
         </header>
@@ -175,28 +175,28 @@ export default function DashboardPage() {
           <div className="dashboard-heading">
             <div>
               <span className="dashboard-kicker">{fechaHoy}</span>
-              <h1>Resumen de ventas</h1>
-              <p>Esto es lo que está pasando en tu cafetería.</p>
+              <h1>Así va la casa</h1>
+              <p>Un vistazo a los pedidos y a lo que más se está disfrutando.</p>
             </div>
           </div>
 
           {error && <p style={{ color: "#a33", marginBottom: "16px" }}>{error}</p>}
 
           <div className="dashboard-metrics">
-            <article><span className="metric-badge metric-brown"><DashboardIcon type="chart" /></span><div><small>VENTAS TOTALES</small><strong>{money(totalSales)}</strong></div></article>
-            <article><span className="metric-badge metric-peach"><DashboardIcon type="orders" /></span><div><small>PEDIDOS</small><strong>{totalOrders}</strong></div></article>
+            <article><span className="metric-badge metric-brown"><DashboardIcon type="chart" /></span><div><small>VENTAS REGISTRADAS</small><strong>{money(totalSales)}</strong></div></article>
+            <article><span className="metric-badge metric-peach"><DashboardIcon type="orders" /></span><div><small>PEDIDOS RECIBIDOS</small><strong>{totalOrders}</strong></div></article>
             <article><span className="metric-badge metric-sage"><DashboardIcon type="products" /></span><div><small>PROMEDIO POR PEDIDO</small><strong>{money(averageTicket)}</strong></div></article>
-            <article><span className="metric-badge metric-sand"><DashboardIcon type="customers" /></span><div><small>CLIENTES CON PEDIDOS</small><strong>{clientesUnicos}</strong></div></article>
+            <article><span className="metric-badge metric-sand"><DashboardIcon type="customers" /></span><div><small>CLIENTES ATENDIDOS</small><strong>{clientesUnicos}</strong></div></article>
           </div>
 
           <div className="dashboard-panels">
             <section className="dashboard-panel dashboard-ranking">
               <div className="dashboard-panel-heading">
-                <div><h2>Productos más vendidos</h2><p>Unidades vendidas segun los pedidos registrados</p></div>
+                <div><h2>Lo que más sale</h2><p>Las bebidas que nuestros clientes eligen una y otra vez.</p></div>
               </div>
-              <div className="ranking-legend"><span><i className="legend-brown" /> Unidades vendidas</span></div>
+              <div className="ranking-legend"><span><i className="legend-brown" /> Bebidas servidas</span></div>
               {ranking.length === 0 ? (
-                <p style={{ padding: "24px 0", color: "var(--muted)" }}>Aún no hay pedidos para calcular el ranking.</p>
+                <p style={{ padding: "24px 0", color: "var(--muted)" }}>Aún no llegan pedidos. Cuando llegue el primero, lo verás aquí.</p>
               ) : (
                 <>
                   <div className="ranking-chart">
@@ -212,7 +212,7 @@ export default function DashboardPage() {
                     ))}
                   </div>
                   <div className="ranking-foot">
-                    <span>El producto líder representa el <strong>{porcentajeLider}%</strong> de tus unidades vendidas</span>
+                    <span>La bebida favorita representa el <strong>{porcentajeLider}%</strong> de lo servido</span>
                   </div>
                 </>
               )}
@@ -220,21 +220,21 @@ export default function DashboardPage() {
 
             <section className="dashboard-panel dashboard-sales">
               <div className="dashboard-panel-heading">
-                <div><h2>Pedidos por estado</h2><p>Estado actual de la operación</p></div>
+                <div><h2>Cómo van los pedidos</h2><p>Un vistazo rápido a lo que está pasando en la barra.</p></div>
               </div>
               <div className="ranking-chart">
-                <div className="ranking-column"><strong>{pendientes}</strong><div className="ranking-bar-track"><i style={{ height: `${Math.max(14, (pendientes / Math.max(1, totalOrders)) * 100)}%`, backgroundColor: "#d7b36e" }} /></div><span>Pendiente</span></div>
-                <div className="ranking-column"><strong>{listos}</strong><div className="ranking-bar-track"><i style={{ height: `${Math.max(14, (listos / Math.max(1, totalOrders)) * 100)}%`, backgroundColor: "#9caeb0" }} /></div><span>Listo</span></div>
-                <div className="ranking-column"><strong>{entregados}</strong><div className="ranking-bar-track"><i style={{ height: `${Math.max(14, (entregados / Math.max(1, totalOrders)) * 100)}%`, backgroundColor: "#8e9c76" }} /></div><span>Entregado</span></div>
+                <div className="ranking-column"><strong>{pendientes}</strong><div className="ranking-bar-track"><i style={{ height: `${Math.max(14, (pendientes / Math.max(1, totalOrders)) * 100)}%`, backgroundColor: "#F2C14E" }} /></div><span>Por preparar</span></div>
+                <div className="ranking-column"><strong>{listos}</strong><div className="ranking-bar-track"><i style={{ height: `${Math.max(14, (listos / Math.max(1, totalOrders)) * 100)}%`, backgroundColor: "#88AEB5" }} /></div><span>Listo</span></div>
+                <div className="ranking-column"><strong>{entregados}</strong><div className="ranking-bar-track"><i style={{ height: `${Math.max(14, (entregados / Math.max(1, totalOrders)) * 100)}%`, backgroundColor: "#9AB6A5" }} /></div><span>Entregado</span></div>
               </div>
               <div className="ranking-foot">
-                <span>Ingresos acumulados: <strong>{money(totalSales)}</strong></span>
+                <span>Hasta ahora: <strong>{money(totalSales)}</strong></span>
               </div>
             </section>
 
             <section className="dashboard-panel dashboard-week">
               <div className="dashboard-panel-heading">
-                <div><h2>Actividad de la semana</h2><p>Pedidos recibidos en los últimos 7 días</p></div>
+                <div><h2>El pulso de la semana</h2><p>Pedidos que llegaron en los últimos siete días.</p></div>
               </div>
               <div className="week-visual">
                 <div className="week-bars">
@@ -246,7 +246,7 @@ export default function DashboardPage() {
                   ))}
                 </div>
                 <div className="week-result">
-                  <span>Esta semana</span>
+                  <span>Últimos siete días</span>
                   <strong>{pedidosSemana} <small>pedidos</small></strong>
                 </div>
               </div>
@@ -255,16 +255,16 @@ export default function DashboardPage() {
             <section className="dashboard-panel dashboard-insight">
               <span className="insight-symbol">✦</span>
               <div>
-                <small>RESUMEN</small>
+                    <small>LO MÁS QUERIDO</small>
                 {lider ? (
                   <>
-                    <h2>Tu {lider.name} es el más pedido</h2>
-                    <p>Representa el <strong>{porcentajeLider}%</strong> de las unidades vendidas, con {lider.units} unidades y {money(lider.amount)} en ingresos.</p>
+                    <h2>{lider.name} va ganando</h2>
+                    <p>Ya suma {lider.units} unidades: el <strong>{porcentajeLider}%</strong> de lo servido y {money(lider.amount)} en ventas.</p>
                   </>
                 ) : (
                   <>
-                    <h2>Todavía no hay datos suficientes</h2>
-                    <p>Cuando los clientes empiecen a hacer pedidos, aquí vas a ver el producto más vendido.</p>
+                    <h2>La historia recién empieza</h2>
+                    <p>Cuando lleguen los primeros pedidos, aquí veremos cuál se convierte en el favorito de la casa.</p>
                   </>
                 )}
               </div>

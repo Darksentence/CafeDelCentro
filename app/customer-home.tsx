@@ -50,7 +50,7 @@ export default function CustomerHome() {
       .then((data: Product[]) => {
         setProducts(Array.isArray(data) ? data.filter((product) => product.disponible) : []);
       })
-      .catch((e: Error) => setError(e.message || "No se pudo cargar el menú"))
+      .catch((e: Error) => setError(e.message || "No pudimos traer la carta. Inténtalo de nuevo."))
       .finally(() => setCargando(false));
   }, []);
 
@@ -68,41 +68,41 @@ export default function CustomerHome() {
   return (
     <main className="storefront">
       <header className="store-header">
-        <a className="store-brand" href="#inicio"><span className="brand-cup"><CoffeeIcon /></span><span><strong>Café del Centro</strong><small>Especialidad, calidez y buenos momentos</small></span></a>
-        <nav className="store-nav" aria-label="Navegación de la cafetería"><a href="#menu">Menú</a><a href="#historia">Nuestra historia</a><a href="#contacto">Contacto</a></nav>
+        <a className="store-brand" href="#inicio" aria-label="Café del Centro, ir al inicio"><span className="brand-cup"><CoffeeIcon /></span><span><strong>Café del Centro</strong><small>Café de barrio · San Salvador</small></span></a>
+        <nav className="store-nav" aria-label="Secciones de la cafetería"><a href="#menu">La carta</a><a href="#historia">La casa</a><a href="#contacto">Encuéntranos</a></nav>
         <div className="store-actions">
           {usuario ? (
             <>
               <button className="cart-button" onClick={irAMiZona}>
-                {usuario.rol === "admin" ? "Panel admin" : "Mi cuenta"}
+                {usuario.rol === "admin" ? "Ir al panel" : "Mi cuenta"}
               </button>
-              <button className="cart-button" onClick={cerrarSesion}>Cerrar sesión</button>
+              <button className="cart-button" onClick={cerrarSesion}>Salir</button>
             </>
           ) : (
             <>
-              <a className="dashboard-link" href="/registro">Crear cuenta</a>
-              <button className="cart-button" onClick={() => router.push("/login")}>Iniciar sesión</button>
+              <a className="dashboard-link" href="/registro">Únete a la mesa</a>
+              <button className="cart-button" onClick={() => router.push("/login")}>Entrar</button>
             </>
           )}
         </div>
       </header>
 
       <section className="hero" id="inicio">
-        <div className="hero-copy"><span className="section-kicker">CAFÉ DE ESPECIALIDAD · DESDE 2018</span><h1>Un buen café<br /><em>conecta.</em></h1><p>Granos seleccionados, manos expertas y un espacio para disfrutar sin prisa en el corazón de la ciudad.</p><div className="hero-actions"><a className="primary-button" href="/menu">Ver el menú <ArrowIcon /></a><a className="quiet-link" href="#historia">Conoce nuestra historia <ArrowIcon /></a></div></div>
-        <div className="hero-art" aria-label="Ilustración de una taza de café"><div className="sun-disc" /><div className="steam steam-one" /><div className="steam steam-two" /><div className="cup-illustration"><div className="cup-top"><span /></div><div className="cup-body" /><div className="cup-handle" /></div><span className="art-caption">HECHO CON TIEMPO<br /><strong>Y BUEN GRANO</strong></span></div>
-        <div className="hero-foot"><span>San Salvador · Centro Histórico</span><span className="scroll-hint"><i /> Desliza para descubrir</span><span>Lun — Sáb · 7:00 AM — 6:00 PM</span></div>
+        <div className="hero-copy"><span className="section-kicker">UN RINCÓN EN EL CENTRO HISTÓRICO</span><h1>Aquí el día<br /><em>va mejor.</em></h1><p>Café recién hecho, algo rico para acompañar y una mesa que siempre tiene espacio para ti.</p><div className="hero-actions"><a className="primary-button" href="/menu">Descubre la carta <ArrowIcon /></a><a className="quiet-link" href="#historia">Así nació este lugar <ArrowIcon /></a></div></div>
+        <div className="hero-art" aria-label="Ilustración de una taza de café"><div className="sun-disc" /><div className="steam steam-one" /><div className="steam steam-two" /><div className="cup-illustration"><div className="cup-top"><span /></div><div className="cup-body" /><div className="cup-handle" /></div><span className="art-caption">TU PAUSA<br /><strong>EMPIEZA AQUÍ</strong></span></div>
+        <div className="hero-foot"><span>Centro Histórico · San Salvador</span><span className="scroll-hint"><i /> Un poco más abajo</span><span>Lun — Sáb · 7:00 AM — 6:00 PM</span></div>
       </section>
 
       <section className="menu-section" id="menu">
         <div className="section-intro">
-          <div><span className="section-kicker">PARA CADA MOMENTO</span><h2>Elige tu<br /><em>favorito.</em></h2></div>
-          <p>Desde un espresso intenso hasta un latte suave. Preparamos cada taza respetando el origen y el momento.</p>
+          <div><span className="section-kicker">LO QUE SALE DE NUESTRA BARRA</span><h2>Algo rico<br /><em>te espera.</em></h2></div>
+          <p>Espresso, bebidas frías y clásicos de la casa. Elige lo que se te antoja; lo preparamos al momento.</p>
         </div>
 
-        {cargando && <p style={{ color: "var(--muted)", padding: "24px 0" }}>Cargando el menú...</p>}
+        {cargando && <p style={{ color: "var(--muted)", padding: "24px 0" }}>Un momento, estamos armando la carta…</p>}
         {error && <p style={{ color: "#a33", padding: "24px 0" }}>{error}</p>}
         {!cargando && !error && destacados.length === 0 && (
-          <p style={{ color: "var(--muted)", padding: "24px 0" }}>No hay productos disponibles en este momento.</p>
+          <p style={{ color: "var(--muted)", padding: "24px 0" }}>Estamos renovando la carta. Vuelve pronto.</p>
         )}
 
         <div className="menu-grid">
@@ -121,14 +121,14 @@ export default function CustomerHome() {
           ))}
         </div>
 
-        <a className="outline-button" href="/menu">Ver todos los productos <ArrowIcon /></a>
+        <a className="outline-button" href="/menu">Ver la carta completa <ArrowIcon /></a>
       </section>
 
-      <section className="story-section" id="historia"><div className="story-visual"><div className="story-stamp">CD<br /><small>2018</small></div><span>ORIGEN · OFICIO · ENCUENTRO</span></div><div className="story-copy"><span className="section-kicker">NUESTRA FILOSOFÍA</span><h2>El café sabe mejor<br /><em>cuando se comparte.</em></h2><p>Creemos que una cafetería es mucho más que una barra. Es ese punto de encuentro donde las ideas se vuelven conversaciones y el tiempo se disfruta de otra forma.</p><a className="quiet-link" href="#contacto">Ven a conocernos <ArrowIcon /></a></div></section>
+      <section className="story-section" id="historia"><div className="story-visual"><div className="story-stamp">CD<br /><small>2018</small></div><span>UN BUEN LUGAR PARA HACER UNA PAUSA</span></div><div className="story-copy"><span className="section-kicker">UN POCO DE HISTORIA</span><h2>Un lugar para<br /><em>volver.</em></h2><p>Nacimos con una idea sencilla: servir buen café y hacer que cada visita se sienta cercana. Desde entonces, esta esquina es punto de encuentro para quienes viven, trabajan o pasean por el Centro.</p><a className="quiet-link" href="#contacto">Pasa a saludar <ArrowIcon /></a></div></section>
 
-      <section className="contact-section" id="contacto"><div><span className="section-kicker">ATENCIÓN &amp; RESERVAS</span><h2>Conectemos sobre<br /><em>un buen café.</em></h2><p>¿Tienes una ocasión especial o quieres reservar un espacio? Escríbenos, nos encantará recibirte.</p></div><a className="primary-button" href="mailto:hola@cafedelcentro.com">Enviar un mensaje <ArrowIcon /></a></section>
+      <section className="contact-section" id="contacto"><div><span className="section-kicker">¿TE GUARDAMOS UN LUGAR?</span><h2>Tu próxima pausa<br /><em>empieza aquí.</em></h2><p>Para grupos, celebraciones o simplemente para saludarnos, escríbenos. Nosotros ponemos el café.</p></div><a className="primary-button" href="mailto:hola@cafedelcentro.com">Escríbenos <ArrowIcon /></a></section>
 
-      <footer className="store-footer"><a className="store-brand" href="#inicio"><span className="brand-cup"><CoffeeIcon /></span><span><strong>Café del Centro</strong><small>Especialidad, calidez y buenos momentos</small></span></a><span>© 2026 Café del Centro</span><div><a href="/menu">Menú</a><a href="#contacto">Contacto</a><a href="/login">Iniciar sesión</a></div></footer>
+      <footer className="store-footer"><a className="store-brand" href="#inicio"><span className="brand-cup"><CoffeeIcon /></span><span><strong>Café del Centro</strong><small>Hecho para volver</small></span></a><span>© 2026 · Café del Centro, San Salvador</span><div><a href="/menu">La carta</a><a href="#contacto">Encuéntranos</a><a href="/login">Mi cuenta</a></div></footer>
     </main>
   );
 }

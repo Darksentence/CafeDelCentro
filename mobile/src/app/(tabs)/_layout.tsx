@@ -41,8 +41,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Inicio",
-          tabBarLabel: "Inicio",
+          title: "Portada",
+          tabBarLabel: "Portada",
           tabBarIcon: ({ color, size, focused }) =>
             tabIcon("⌂", color, size, focused),
         }}
@@ -50,8 +50,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="menu"
         options={{
-          title: "Menú",
-          tabBarLabel: "Menú",
+          title: "La carta",
+          tabBarLabel: "Carta",
           tabBarIcon: ({ color, size, focused }) =>
             tabIcon("☕", color, size, focused),
         }}
@@ -59,8 +59,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="cart"
         options={{
-          title: "Carrito",
-          tabBarLabel: "Carrito",
+          title: "Tu bolsa",
+          tabBarLabel: "Bolsa",
           tabBarIcon: ({ color, size, focused }) =>
             tabIcon("＋", color, size, focused),
         }}
@@ -68,7 +68,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="orders"
         options={{
-          title: "Pedidos",
+          title: "Tus pedidos",
           tabBarLabel: "Pedidos",
           tabBarIcon: ({ color, size, focused }) =>
             tabIcon("▤", color, size, focused),
@@ -77,8 +77,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Perfil",
-          tabBarLabel: "Perfil",
+          title: "Tu cuenta",
+          tabBarLabel: "Cuenta",
           tabBarIcon: ({ color, size, focused }) =>
             tabIcon("○", color, size, focused),
         }}

@@ -29,12 +29,12 @@ export function ProductCard({
           <Text style={styles.name}>{producto.nombre}</Text>
           <Text style={styles.description} numberOfLines={2}>
             {producto.descripcion ||
-              "Preparado al momento con café de especialidad."}
+              "Hecho al momento y con mucho cariño."}
           </Text>
         </View>
       </View>
 
-      <Text style={styles.sizeLabel}>TAMAÑO DEL VASO</Text>
+      <Text style={styles.sizeLabel}>ELIGE EL TAMAÑO</Text>
       <View style={styles.sizes}>
         {sizes.map((size) => {
           const selected = size === tamano;
@@ -62,10 +62,10 @@ export function ProductCard({
 
       <View style={styles.bottomRow}>
         <View>
-          <Text style={styles.priceCaption}>PRECIO</Text>
+          <Text style={styles.priceCaption}>POR BEBIDA</Text>
           <Text style={styles.price}>{"$" + price.toFixed(2)}</Text>
         </View>
-        <AppButton title="Añadir" onPress={onAdd} compact />
+        <AppButton title="A mi bolsa" onPress={onAdd} compact />
       </View>
     </View>
   );
