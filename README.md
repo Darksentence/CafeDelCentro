@@ -128,3 +128,9 @@ La prueba manual recomendada es: iniciar sesión o registrarse, filtrar el menú
 ## Alcance de esta entrega
 
 Este README describe únicamente el trabajo de **Etapa 3, Foro 1**. Firebase, Firestore, inicio de sesión con Google y el contenido de foros posteriores no forman parte de este avance.
+
+##Requerimientos de entrega
+Acontinuacion se anexan los links a la documentacion reauerida y a video alojado en youtube copiar y pegar los link o abrir directamente.
+
+Likn a documentacion : https://1drv.ms/w/c/2c4431c3aec74789/IQBvSHgTzLGnTYhV34YC_ly3AbI1JInwK_kRbpse_uvFmQY?e=o4kfTN
+Link a video:      https://youtu.be/oodoMb9COwE?feature=shared  
