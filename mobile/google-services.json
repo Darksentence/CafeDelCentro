@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "744114193400",
+    "project_id": "cafe-del-centro",
+    "storage_bucket": "cafe-del-centro.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744114193400:android:f1c475e2575a21a93b0c0d",
+        "android_client_info": {
+          "package_name": "com.cafedelcentro.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744114193400-p3pi6e729cdease79fjon13upa2baavf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAo3KbQRG95PWHtPFLuI813Byd945l48TI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744114193400-p3pi6e729cdease79fjon13upa2baavf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

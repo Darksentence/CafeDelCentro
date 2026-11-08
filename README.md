@@ -20,6 +20,8 @@ npm install
 npm run start
 ```
 
+Para los builds Android nativos, `mobile/google-services.json` corresponde al paquete `com.cafedelcentro.mobile` y ya está enlazado desde `mobile/app.json`. Expo genera la configuración Gradle durante el prebuild o el build; no es necesario pegar manualmente el plugin `com.google.gms.google-services` en este proyecto administrado. Expo Go no recompila esa configuración nativa.
+
 Para la web, copia `.env.example` a `.env.local`, completa las mismas credenciales de Firebase con el prefijo `NEXT_PUBLIC_` y ejecuta desde la raíz:
 
 ```powershell
