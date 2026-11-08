@@ -2,7 +2,7 @@
 
 ## Alcance
 
-Esta entrega integra Firebase Authentication y Cloud Firestore en la aplicación móvil Expo de Café del Centro. El alcance sigue los requisitos de las páginas 13 a 15 de la Ruta de Aprendizaje DPS941 CII 2026:
+Esta entrega integra Firebase Authentication y Cloud Firestore en la aplicación móvil Expo y en el panel web Next.js de Café del Centro. El alcance sigue los requisitos de las páginas 13 a 15 de la Ruta de Aprendizaje DPS941 CII 2026:
 
 1. autenticación por correo electrónico y Google;
 2. persistencia de información vinculada al usuario autenticado;
@@ -13,19 +13,23 @@ Esta entrega integra Firebase Authentication y Cloud Firestore en la aplicación
 
 ## Arquitectura implementada
 
-La aplicación móvil usa el SDK modular de Firebase directamente desde Expo. Firebase Authentication mantiene la sesión local con @react-native-async-storage/async-storage, mientras que Firestore guarda los perfiles y pedidos.
+La aplicación móvil usa el SDK modular de Firebase directamente desde Expo. La aplicación web usa el SDK modular de Firebase para correo/contraseña, Google mediante ventana emergente y persistencia de sesión del navegador. Ambas superficies comparten usuarios, pedidos y reglas de Firestore.
 
 | Capa | Implementación |
 | --- | --- |
 | Identidad | Firebase Authentication: correo/contraseña y Google OAuth |
-| Sesión | onAuthStateChanged en SessionContext; el árbol de rutas se protege según la sesión |
+| Sesión | onAuthStateChanged en SessionContext y listener Firebase en la web; las rutas se protegen según la sesión |
 | Perfil | usuarios/{uid} con nombre, correo, rol y puntos derivados |
 | Pedido | pedidos/{id} con uid, items, total, estado y fecha |
 | Catálogo | Módulo local de productos para que el menú funcione sin una segunda API |
 | Historial | Consulta Firestore filtrada por uid; el administrador puede consultar todos los pedidos |
 | Seguridad | firestore.rules: cliente solo accede a sus propios datos; administrador gestiona estados |
 
-La clave de Firebase para una aplicación web no es un secreto. No se incluyen credenciales reales en el repositorio: se deben proporcionar mediante mobile/.env.local, que está excluido por .gitignore.
+La configuración pública de Firebase no es un secreto. No se incluyen credenciales reales en el repositorio: la app móvil usa mobile/.env.local y la web usa .env.local; ambos archivos están excluidos por .gitignore.
+
+### Aplicación web
+
+La web reutiliza las colecciones usuarios y pedidos. El acceso por correo y Google crea o completa el perfil usuarios/{uid}; el contexto de la aplicación consulta el historial del usuario autenticado y el dashboard administrativo consulta todos los pedidos únicamente cuando el perfil tiene rol admin. La configuración se toma de las variables NEXT_PUBLIC_FIREBASE_*.
 
 ## Flujo de autenticación
 
@@ -95,9 +99,10 @@ Las reglas deben desplegarse en Firebase antes de la demostración:
 1. Crear o seleccionar un proyecto en Firebase Console.
 2. Habilitar Authentication > Sign-in method > Email/Password y Google.
 3. Crear una aplicación web en Project settings y copiar su configuración a mobile/.env.local.
-4. Crear los clientes OAuth de Google para web, Android e iOS. Usar el esquema cafedelcentro y los identificadores nativos com.cafedelcentro.mobile.
-5. Crear la base de datos Cloud Firestore en modo producción y desplegar firestore.rules.
-6. Registrar un usuario y, si se quiere demostrar el panel de administración, cambiar su campo rol a admin desde la consola.
+4. Copiar la configuración web a .env.local con las variables NEXT_PUBLIC_FIREBASE_*.
+5. Autorizar el dominio de la web y habilitar Google; para móvil, crear los clientes OAuth Android/iOS con el esquema cafedelcentro y el identificador com.cafedelcentro.mobile.
+6. Crear la base de datos Cloud Firestore en modo producción y desplegar firestore.rules.
+7. Registrar un usuario y, si se quiere demostrar el panel de administración, cambiar su campo rol a admin desde la consola.
 
 ## Pruebas verificadas en el repositorio
 
@@ -108,7 +113,11 @@ Se ejecutan localmente:
     npm run typecheck
     npx expo-doctor
 
-La autenticación real de correo, Google y Firestore requiere completar la configuración externa indicada arriba. Mientras esas variables no existan, la app muestra un mensaje de configuración y no se presenta como conectada a Firebase.
+Para la web:
+
+    npm run build -- --webpack
+
+La autenticación real de correo, Google y Firestore requiere completar la configuración externa indicada arriba. Mientras esas variables no existan, la aplicación muestra un mensaje de configuración y no se presenta como conectada a Firebase.
 
 ## Guion de demostración
 

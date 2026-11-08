@@ -4,6 +4,8 @@
 
 La aplicación móvil en `mobile/` integra Firebase Authentication con correo y Google, perfiles en Cloud Firestore, pedidos asociados al `uid` autenticado, historial, puntos derivados y gestión administrativa de estados. La implementación y el guion de demostración están en [`docs/ETAPA3_FORO2.md`](docs/ETAPA3_FORO2.md).
 
+La aplicación web también usa Firebase para iniciar sesión por correo o Google, mantener la sesión en el navegador y leer/escribir perfiles y pedidos en las mismas colecciones de Firestore.
+
 ### Configuración rápida de Firebase
 
 1. Copia `mobile/.env.example` como `mobile/.env.local`.
@@ -18,16 +20,23 @@ npm install
 npm run start
 ```
 
+Para la web, copia `.env.example` a `.env.local`, completa las mismas credenciales de Firebase con el prefijo `NEXT_PUBLIC_` y ejecuta desde la raíz:
+
+```powershell
+npm install
+npm run dev
+```
+
 La configuración real y las credenciales no se versionan. Sin ellas, la app muestra un mensaje claro y no se presenta como conectada a Firebase.
 
-Proyecto académico para una cafetería que incluye una aplicación web con Next.js y una app móvil con React Native y Expo. Este avance se limita a **Etapa 3, Foro 1**.
+Proyecto académico para una cafetería que incluye una aplicación web con Next.js y una app móvil con React Native y Expo. Esta entrega incorpora la integración de Firebase de **Etapa 3, Foro 2**.
 
 ## Qué contiene
 
 - Sitio web para consultar el menú, iniciar sesión, registrarse y administrar pedidos.
 - App móvil con bienvenida, inicio de sesión, registro, inicio, menú, carrito, pedidos y perfil.
-- API de Next.js compartida por la web y la app móvil.
-- Guía del alcance, decisiones de interfaz, propuesta de frames y pruebas de Foro 1 en [`docs/ETAPA3_FORO1.md`](docs/ETAPA3_FORO1.md).
+- API de Next.js para el catálogo heredado y compatibilidad con el avance anterior.
+- Guía técnica y pruebas de Foro 2 en [`docs/ETAPA3_FORO2.md`](docs/ETAPA3_FORO2.md).
 
 La app móvil reutiliza la identidad visual de la web. El repositorio no incluye el archivo ni el enlace del diseño original de Figma; por eso, la guía documenta frames propuestos que aún deben cotejarse con el diseño final del equipo.
 

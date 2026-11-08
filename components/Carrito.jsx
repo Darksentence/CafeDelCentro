@@ -5,13 +5,20 @@ import { useApp } from "@/context/AppContext";
 export default function Carrito() {
   const { carrito, actualizarCantidad, eliminarDelCarrito, calcularTotalCarrito, finalizarPedido } = useApp();
   const [mensajeExito, setMensajeExito] = useState(false);
+  const [mensajeError, setMensajeError] = useState("");
   const cantidadTotal = carrito.reduce((acc, item) => acc + item.cantidad, 0);
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (carrito.length === 0) return;
-    finalizarPedido();
-    setMensajeExito(true);
-    setTimeout(() => setMensajeExito(false), 4000);
+    setMensajeError("");
+    try {
+      const creado = await finalizarPedido();
+      if (!creado) return;
+      setMensajeExito(true);
+      setTimeout(() => setMensajeExito(false), 4000);
+    } catch (error) {
+      setMensajeError(error instanceof Error ? error.message : "No pudimos enviar el pedido.");
+    }
   };
 
   return (
@@ -26,6 +33,11 @@ export default function Carrito() {
       {mensajeExito && (
         <div className="mb-4 p-3 bg-green-50 text-green-700 text-sm rounded-lg border border-green-200">
           ¡Listo! Ya recibimos tu pedido.
+        </div>
+      )}
+      {mensajeError && (
+        <div className="mb-4 p-3 bg-red-50 text-red-700 text-sm rounded-lg border border-red-200">
+          {mensajeError}
         </div>
       )}
 

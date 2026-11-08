@@ -2,7 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { registrar } from "@/services/authService";
+import {
+  loginConGoogle,
+  mensajeAuth,
+  registrar,
+  rutaDeUsuario,
+  suscribirseSesion
+} from "@/services/authService";
+
+type SessionUser = { id: string; rol?: string };
 
 export default function RegistroPage() {
   const router = useRouter();
@@ -12,17 +20,13 @@ export default function RegistroPage() {
   const [password, setPassword] = useState("");
   const [mensaje, setMensaje] = useState("");
   const [cargando, setCargando] = useState(false);
+  const [cargandoGoogle, setCargandoGoogle] = useState(false);
 
   useEffect(() => {
-    const guardado = localStorage.getItem("usuario");
-    if (guardado) {
-      try {
-        const datos = JSON.parse(guardado);
-        router.push(datos.rol === "admin" ? "/dashboard" : "/menu");
-      } catch {
-        localStorage.removeItem("usuario");
-      }
-    }
+    const unsubscribe = suscribirseSesion((datos: SessionUser | null) => {
+      if (datos) router.replace(rutaDeUsuario(datos));
+    });
+    return unsubscribe;
   }, [router]);
 
   const registrarUsuario = async (e: React.FormEvent) => {
@@ -44,15 +48,24 @@ export default function RegistroPage() {
 
     try {
       const datos = await registrar(nombre.trim(), email.trim(), password);
-
-      localStorage.setItem("usuario", JSON.stringify(datos));
-
-      router.push("/menu");
+      router.push(rutaDeUsuario(datos));
     } catch (error: unknown) {
-      const texto = error instanceof Error ? error.message : "No pudimos crear tu cuenta. Inténtalo otra vez.";
-      setMensaje(texto);
+      setMensaje(mensajeAuth(error));
     } finally {
       setCargando(false);
+    }
+  };
+
+  const registrarseConGoogle = async () => {
+    setMensaje("");
+    setCargandoGoogle(true);
+    try {
+      const datos = await loginConGoogle();
+      router.push(rutaDeUsuario(datos));
+    } catch (error: unknown) {
+      setMensaje(mensajeAuth(error));
+    } finally {
+      setCargandoGoogle(false);
     }
   };
 
@@ -169,6 +182,31 @@ export default function RegistroPage() {
             {cargando ? "Preparando tu cuenta..." : "Listo, crear cuenta"}
           </button>
         </form>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", margin: "18px 0" }}>
+          <span style={{ flex: 1, height: "1px", background: "var(--line)" }} />
+          <span style={{ color: "var(--muted)", fontSize: "13px" }}>o</span>
+          <span style={{ flex: 1, height: "1px", background: "var(--line)" }} />
+        </div>
+
+        <button
+          type="button"
+          onClick={registrarseConGoogle}
+          disabled={cargando || cargandoGoogle}
+          style={{
+            width: "100%",
+            padding: "13px",
+            border: "1px solid var(--brown)",
+            borderRadius: "999px",
+            background: "white",
+            color: "var(--brown-dark)",
+            cursor: cargando || cargandoGoogle ? "not-allowed" : "pointer",
+            fontSize: "16px",
+            opacity: cargandoGoogle ? 0.7 : 1,
+          }}
+        >
+          {cargandoGoogle ? "Abriendo Google..." : "Registrarme con Google"}
+        </button>
 
         <p style={{ textAlign: "center", marginTop: "22px", color: "var(--muted)" }}>
           ¿Ya nos conocemos?

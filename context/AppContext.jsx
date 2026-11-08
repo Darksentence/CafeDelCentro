@@ -1,12 +1,19 @@
 "use client";
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { obtenerProductos } from "@/services/productosService";
 import {
-  crearPedido as apiCrearPedido,
   cambiarEstadoPedido as apiCambiarEstado,
-  obtenerPedidos,
-  obtenerPedidosDeUsuario
+  crearPedido as apiCrearPedido,
+  obtenerPedidos
 } from "@/services/pedidosService";
+import {
+  calcularPuntos,
+  obtenerPedidosDeUsuario
+} from "@/services/firestoreService";
+import {
+  cerrarSesion as cerrarSesionFirebase,
+  suscribirseSesion
+} from "@/services/authService";
 
 const AppContext = createContext();
 
@@ -18,59 +25,63 @@ export const AppProvider = ({ children }) => {
   const [puntosUsuario, setPuntosUsuario] = useState(0);
   const [pedidos, setPedidos] = useState([]);
 
-  // Recuperar la sesion guardada al iniciar
   useEffect(() => {
-    try {
-      const guardado = localStorage.getItem("usuario");
-      if (guardado) {
-        const datos = JSON.parse(guardado);
-        setUsuario(datos);
-        setPuntosUsuario(datos.puntos ?? 0);
+    let activo = true;
+    const unsubscribe = suscribirseSesion(async (datos) => {
+      if (!activo) return;
+      if (!datos) {
+        setUsuario(null);
+        setPedidos([]);
+        setPuntosUsuario(0);
+        setCargandoSesion(false);
+        return;
       }
-    } catch {
-      localStorage.removeItem("usuario");
-    }
-    setCargandoSesion(false);
+
+      setUsuario(datos);
+      try {
+        const historial = datos.rol === "admin"
+          ? await obtenerPedidos(datos.id, true)
+          : await obtenerPedidosDeUsuario(datos.id);
+        if (!activo) return;
+        const puntos = calcularPuntos(historial);
+        setPedidos(historial);
+        setPuntosUsuario(puntos);
+        setUsuario((actual) => actual ? { ...actual, puntos } : actual);
+      } catch (error) {
+        console.error("Error al cargar el historial de Firebase:", error);
+      } finally {
+        if (activo) setCargandoSesion(false);
+      }
+    });
+
+    return () => {
+      activo = false;
+      unsubscribe();
+    };
   }, []);
 
-  // Cargar productos
   useEffect(() => {
     obtenerProductos()
-      .then(data => setProductos(data))
-      .catch(err => console.error("Error al cargar productos:", err));
+      .then((data) => setProductos(data))
+      .catch((error) => console.error("Error al cargar productos:", error));
   }, []);
 
-  // Cargar pedidos segun el rol del usuario
-  useEffect(() => {
-    if (!usuario) {
-      setPedidos([]);
-      return;
-    }
-    const consulta = usuario.rol === "admin"
-      ? obtenerPedidos()
-      : obtenerPedidosDeUsuario(usuario.id);
-
-    consulta
-      .then(data => setPedidos(data))
-      .catch(err => console.error("Error al cargar pedidos:", err));
-  }, [usuario]);
-
-  const cerrarSesion = () => {
-    localStorage.removeItem("usuario");
+  const cerrarSesion = async () => {
+    await cerrarSesionFirebase();
     setUsuario(null);
     setCarrito([]);
     setPedidos([]);
     setPuntosUsuario(0);
   };
 
-  // --- CARRITO ---
   const agregarAlCarrito = (producto, tamano) => {
     const precioFinal = producto.precios[tamano];
+    if (typeof precioFinal !== "number") return;
 
-    setCarrito(prev => {
-      const existe = prev.some(item => item.id === producto.id && item.tamano === tamano);
+    setCarrito((prev) => {
+      const existe = prev.some((item) => item.id === producto.id && item.tamano === tamano);
       if (existe) {
-        return prev.map(item =>
+        return prev.map((item) =>
           item.id === producto.id && item.tamano === tamano
             ? { ...item, cantidad: item.cantidad + 1 }
             : item
@@ -80,7 +91,7 @@ export const AppProvider = ({ children }) => {
         productoId: producto.id,
         id: producto.id,
         nombre: producto.nombre,
-        tamano: tamano,
+        tamano,
         precio: precioFinal,
         cantidad: 1
       }];
@@ -88,55 +99,49 @@ export const AppProvider = ({ children }) => {
   };
 
   const actualizarCantidad = (id, tamano, delta) => {
-    setCarrito(prev => prev.map(item => {
-      if (item.id === id && item.tamano === tamano) {
-        const nuevaCantidad = item.cantidad + delta;
-        return nuevaCantidad > 0 ? { ...item, cantidad: nuevaCantidad } : null;
-      }
-      return item;
-    }).filter(Boolean));
+    setCarrito((prev) => prev
+      .map((item) => {
+        if (item.id === id && item.tamano === tamano) {
+          const nuevaCantidad = item.cantidad + delta;
+          return nuevaCantidad > 0 ? { ...item, cantidad: nuevaCantidad } : null;
+        }
+        return item;
+      })
+      .filter(Boolean));
   };
 
   const eliminarDelCarrito = (id, tamano) => {
-    setCarrito(prev => prev.filter(item => !(item.id === id && item.tamano === tamano)));
+    setCarrito((prev) => prev.filter((item) => !(item.id === id && item.tamano === tamano)));
   };
 
   const calcularTotalCarrito = () => {
-    return carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0).toFixed(2);
+    return carrito
+      .reduce((total, item) => total + item.precio * item.cantidad, 0)
+      .toFixed(2);
   };
 
-  // --- PEDIDOS ---
   const finalizarPedido = async () => {
-    if (carrito.length === 0 || !usuario) return;
+    if (carrito.length === 0 || !usuario) return false;
 
-    const nuevoPedidoData = {
+    const respuesta = await apiCrearPedido({
       usuarioId: usuario.id,
       items: [...carrito],
       total: Number(calcularTotalCarrito())
-    };
-
-    try {
-      const respuesta = await apiCrearPedido(nuevoPedidoData);
-      setPedidos(prev => [respuesta.pedido, ...prev]);
-      setPuntosUsuario(respuesta.puntosTotales);
-      setCarrito([]);
-
-      // Mantener los puntos sincronizados en la sesion guardada
-      const actualizado = { ...usuario, puntos: respuesta.puntosTotales };
-      setUsuario(actualizado);
-      localStorage.setItem("usuario", JSON.stringify(actualizado));
-    } catch (error) {
-      console.error("Error al crear el pedido en la API:", error);
-    }
+    });
+    const nuevosPedidos = [respuesta.pedido, ...pedidos];
+    const nuevosPuntos = calcularPuntos(nuevosPedidos);
+    setPedidos(nuevosPedidos);
+    setPuntosUsuario(nuevosPuntos);
+    setUsuario((actual) => actual ? { ...actual, puntos: nuevosPuntos } : actual);
+    setCarrito([]);
+    return true;
   };
 
   const cambiarEstadoPedido = async (idPedido, nuevoEstado) => {
-    try {
-      await apiCambiarEstado(idPedido, nuevoEstado);
-      setPedidos(prev => prev.map(p => p.id === idPedido ? { ...p, estado: nuevoEstado } : p));
-    } catch (error) {
-      console.error("Error al cambiar estado:", error);
-    }
+    const actualizado = await apiCambiarEstado(idPedido, nuevoEstado);
+    setPedidos((prev) => prev.map((pedido) =>
+      pedido.id === actualizado.id ? actualizado : pedido
+    ));
   };
 
   return (

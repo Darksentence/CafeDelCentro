@@ -1,27 +1,16 @@
-import { peticion } from "./api";
+import {
+    cambiarEstadoPedido,
+    crearPedido,
+    obtenerPedidos
+} from "./firestoreService";
 
-export function obtenerPedidos() {
-    return peticion("/pedidos");
-}
+export { cambiarEstadoPedido, crearPedido, obtenerPedidos };
 
 export function obtenerPedidosDeUsuario(usuarioId) {
-    return peticion(`/pedidos?usuarioId=${usuarioId}`);
+    return obtenerPedidos(usuarioId, false);
 }
 
-export function obtenerPedido(id) {
-    return peticion(`/pedidos/${id}`);
-}
-
-export function crearPedido(pedido) {
-    return peticion("/pedidos", {
-        method: "POST",
-        body: JSON.stringify(pedido)
-    });
-}
-
-export function cambiarEstadoPedido(id, estado) {
-    return peticion(`/pedidos/${id}`, {
-        method: "PUT",
-        body: JSON.stringify({ estado })
-    });
+export async function obtenerPedido(id) {
+    const pedidos = await obtenerPedidos();
+    return pedidos.find((pedido) => pedido.id === id) || null;
 }

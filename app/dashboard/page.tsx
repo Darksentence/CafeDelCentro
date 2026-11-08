@@ -2,11 +2,14 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { obtenerPedidos } from "@/services/pedidosService";
+import { cerrarSesion as cerrarSesionFirebase, suscribirseSesion } from "@/services/authService";
 
 type OrderItem = { nombre?: string; nombreProducto?: string; cantidad?: number; precio?: number };
-type Order = { id: number; usuarioId?: number; items?: OrderItem[]; total?: number; estado?: string; fecha?: string };
+type Order = { id: string; usuarioId?: string; items?: OrderItem[]; total?: number; estado?: string; fecha?: string };
 type RankingItem = { name: string; units: number; amount: number; color: string };
+type SessionUser = { id: string; nombre?: string; rol?: string };
 
 const COLORS = ["#E45736", "#F2C14E", "#9AB6A5", "#88AEB5", "#D9826B"];
 
@@ -38,7 +41,7 @@ function shortProductName(name: string) {
 export default function DashboardPage() {
   const router = useRouter();
 
-  const [usuario, setUsuario] = useState<{ nombre?: string; rol?: string } | null>(null);
+  const [usuario, setUsuario] = useState<SessionUser | null>(null);
   const [active, setActive] = useState("La casa");
   const [orders, setOrders] = useState<Order[]>([]);
   const [cargando, setCargando] = useState(true);
@@ -46,29 +49,32 @@ export default function DashboardPage() {
   const [notice, setNotice] = useState("");
 
   useEffect(() => {
-    const usuarioGuardado = localStorage.getItem("usuario");
-
-    if (!usuarioGuardado) {
-      router.push("/login");
-      return;
-    }
-
-    const datos = JSON.parse(usuarioGuardado);
-
-    if (datos.rol !== "admin") {
-      router.push("/menu");
-      return;
-    }
-
-    setUsuario(datos);
+    const unsubscribe = suscribirseSesion((datos: SessionUser | null, sessionError?: unknown) => {
+      if (sessionError) {
+        setError(sessionError instanceof Error ? sessionError.message : "No pudimos cargar tu sesión.");
+        router.replace("/login");
+        return;
+      }
+      if (!datos) {
+        router.replace("/login");
+        return;
+      }
+      if (datos.rol !== "admin") {
+        router.replace("/menu");
+        return;
+      }
+      setUsuario(datos);
+    });
+    return unsubscribe;
   }, [router]);
 
   useEffect(() => {
-    obtenerPedidos()
+    if (!usuario?.id) return;
+    obtenerPedidos(usuario.id, true)
       .then((data: Order[]) => setOrders(Array.isArray(data) ? data : []))
       .catch((e: Error) => setError(e.message || "No pudimos cargar los pedidos. Inténtalo de nuevo."))
       .finally(() => setCargando(false));
-  }, []);
+  }, [usuario]);
 
   const ranking = useMemo(() => {
     const totals = new Map<string, { units: number; amount: number }>();
@@ -135,8 +141,8 @@ export default function DashboardPage() {
     window.setTimeout(() => setNotice(""), 2600);
   }
 
-  function cerrarSesion() {
-    localStorage.removeItem("usuario");
+  async function cerrarSesion() {
+    await cerrarSesionFirebase();
     router.push("/login");
   }
 
@@ -147,7 +153,7 @@ export default function DashboardPage() {
   return (
     <main className="dashboard-shell">
       <aside className="dashboard-sidebar">
-        <a className="dashboard-brand" href="/"><span><CoffeeIcon /></span><strong>Café del Centro</strong><small>Gestión de la casa</small></a>
+        <Link className="dashboard-brand" href="/"><span><CoffeeIcon /></span><strong>Café del Centro</strong><small>Gestión de la casa</small></Link>
         <div className="dashboard-menu-label">EL DÍA A DÍA</div>
         <nav className="dashboard-nav" aria-label="Navegación del panel">
           <button className={active === "La casa" ? "active" : ""} onClick={() => setActive("La casa")}><DashboardIcon type="overview" /><span>La casa</span></button>
