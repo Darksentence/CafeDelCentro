@@ -1,9 +1,12 @@
+export type RolUsuario = "cliente" | "admin";
+
 export type Usuario = {
-  id: number;
+  id: string;
   nombre: string;
   email: string;
-  rol: "cliente" | "admin" | string;
+  rol: RolUsuario;
   puntos?: number;
+  fotoUrl?: string;
 };
 
 export type Producto = {
@@ -25,10 +28,11 @@ export type ItemCarrito = {
 };
 
 export type Pedido = {
-  id: number;
-  usuarioId: number;
+  id: string;
+  usuarioId: string;
+  uid: string;
   items: ItemCarrito[];
   total: number;
-  estado: "pendiente" | "listo" | "entregado" | string;
+  estado: "pendiente" | "listo" | "entregado";
   fecha: string;
 };

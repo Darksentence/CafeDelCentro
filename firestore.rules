@@ -1,0 +1,65 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.rol == "admin";
+    }
+
+    match /usuarios/{userId} {
+      allow read: if signedIn() && (request.auth.uid == userId || isAdmin());
+
+      allow create: if signedIn()
+        && request.auth.uid == userId
+        && request.resource.data.uid == userId
+        && request.resource.data.rol == "cliente"
+        && request.resource.data.puntos == 0
+        && request.resource.data.keys().hasAll([
+          "uid", "nombre", "email", "rol", "puntos"
+        ]);
+
+      allow update: if signedIn()
+        && request.auth.uid == userId
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.rol == resource.data.rol
+        && request.resource.data.puntos == resource.data.puntos
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "nombre", "email", "fotoUrl", "updatedAt"
+        ]);
+
+      allow delete: if false;
+    }
+
+    match /pedidos/{pedidoId} {
+      allow read: if signedIn()
+        && (resource.data.uid == request.auth.uid || isAdmin());
+
+      allow create: if signedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.usuarioId == request.auth.uid
+        && request.resource.data.estado == "pendiente"
+        && request.resource.data.total is number
+        && request.resource.data.total > 0
+        && request.resource.data.items is list
+        && request.resource.data.items.size() > 0
+        && request.resource.data.keys().hasAll([
+          "uid", "usuarioId", "items", "total", "estado", "fecha"
+        ]);
+
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "estado", "updatedAt"
+        ])
+        && request.resource.data.estado in [
+          "pendiente", "listo", "entregado"
+        ];
+
+      allow delete: if isAdmin();
+    }
+  }
+}

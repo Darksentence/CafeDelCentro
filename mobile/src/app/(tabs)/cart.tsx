@@ -9,7 +9,7 @@ import {
   Surface,
 } from "@/components/ui";
 import { useSession } from "@/context/SessionContext";
-import { crearPedido } from "@/services/api";
+import { crearPedido } from "@/services/firestore";
 import { colors } from "@/theme";
 
 export default function CartTab() {
@@ -18,11 +18,11 @@ export default function CartTab() {
     carrito,
     cambiarCantidad,
     vaciarCarrito,
-    actualizarPuntos,
+    refrescarUsuario,
   } = useSession();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [pedidoCreado, setPedidoCreado] = useState<number | null>(null);
+  const [pedidoCreado, setPedidoCreado] = useState<string | null>(null);
   const total = carrito.reduce(
     (sum, item) => sum + item.precio * item.cantidad,
     0
@@ -34,7 +34,7 @@ export default function CartTab() {
     setLoading(true);
     try {
       const respuesta = await crearPedido(usuario.id, carrito, total);
-      await actualizarPuntos(respuesta.puntosTotales);
+      await refrescarUsuario();
       vaciarCarrito();
       setPedidoCreado(respuesta.pedido.id);
     } catch (cause) {

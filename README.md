@@ -1,5 +1,25 @@
 # Café del Centro
 
+## Foro 2: Firebase + React Native
+
+La aplicación móvil en `mobile/` integra Firebase Authentication con correo y Google, perfiles en Cloud Firestore, pedidos asociados al `uid` autenticado, historial, puntos derivados y gestión administrativa de estados. La implementación y el guion de demostración están en [`docs/ETAPA3_FORO2.md`](docs/ETAPA3_FORO2.md).
+
+### Configuración rápida de Firebase
+
+1. Copia `mobile/.env.example` como `mobile/.env.local`.
+2. Completa la configuración de una aplicación web de Firebase y los tres Client ID de Google.
+3. Habilita Email/Password y Google en Firebase Authentication.
+4. Despliega las reglas con `firebase deploy --only firestore:rules`.
+5. Reinicia Expo después de cambiar las variables:
+
+```powershell
+Set-Location .\mobile
+npm install
+npm run start
+```
+
+La configuración real y las credenciales no se versionan. Sin ellas, la app muestra un mensaje claro y no se presenta como conectada a Firebase.
+
 Proyecto académico para una cafetería que incluye una aplicación web con Next.js y una app móvil con React Native y Expo. Este avance se limita a **Etapa 3, Foro 1**.
 
 ## Qué contiene
@@ -125,9 +145,9 @@ npx expo export --platform web
 
 La prueba manual recomendada es: iniciar sesión o registrarse, filtrar el menú, elegir tamaño y añadir productos, cambiar cantidades en el carrito, confirmar un pedido, revisar el historial y cerrar sesión. Para validar administración, inicia sesión con una cuenta de ese rol y cambia el estado de un pedido.
 
-## Alcance de esta entrega
+## Alcance de la entrega anterior
 
-Este README describe únicamente el trabajo de **Etapa 3, Foro 1**. Firebase, Firestore, inicio de sesión con Google y el contenido de foros posteriores no forman parte de este avance.
+Las rutas web y la API heredadas de Foro 1 se conservan para no romper el proyecto existente. La app móvil ya no depende de esa API para iniciar sesión ni para guardar pedidos: utiliza Firebase según la documentación de Foro 2.
 
 ##Requerimientos de entrega
 Acontinuacion se anexan los links a la documentacion reauerida y a video alojado en youtube copiar y pegar los link o abrir directamente.

@@ -1,27 +1,41 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { router } from "expo-router";
-import { Text, View, StyleSheet } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { AppButton, CafeBrand, Field, Notice, Page } from "@/components/ui";
-import { useSession } from "@/context/SessionContext";
-import { iniciarSesion as solicitarSesion } from "@/services/api";
+import { useGoogleSignIn } from "@/hooks/useGoogleSignIn";
+import {
+  iniciarSesionConEmail,
+  mensajeAuth,
+  validateEmail,
+  validatePassword,
+} from "@/services/firebaseAuth";
 import { colors } from "@/theme";
 
 export default function LoginScreen() {
-  const { iniciarSesionLocal } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const onGoogleSuccess = useCallback(() => router.replace("/(tabs)"), []);
+  const google = useGoogleSignIn(onGoogleSuccess);
 
   async function submit() {
     setError("");
+    if (!validateEmail(email)) {
+      setError("Escribe un correo electrónico válido.");
+      return;
+    }
+    if (!validatePassword(password)) {
+      setError("La contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
+
     setLoading(true);
     try {
-      const usuario = await solicitarSesion(email.trim(), password);
-      await iniciarSesionLocal(usuario);
+      await iniciarSesionConEmail(email, password);
       router.replace("/(tabs)");
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "No pudimos entrar a tu cuenta. Inténtalo otra vez.");
+      setError(mensajeAuth(cause));
     } finally {
       setLoading(false);
     }
@@ -52,16 +66,29 @@ export default function LoginScreen() {
           label="Contraseña"
           value={password}
           onChangeText={setPassword}
-          placeholder="Escribe tu contraseña"
+          placeholder="Seis caracteres o más"
           secureTextEntry
           inputProps={{ autoComplete: "password", textContentType: "password" }}
         />
         {error ? <Notice>{error}</Notice> : null}
         <AppButton
-          title="Continuar"
+          title="Continuar con correo"
           onPress={submit}
           loading={loading}
           disabled={!email.trim() || !password}
+        />
+        <View style={styles.divider}>
+          <View style={styles.dividerLine} />
+          <Text style={styles.dividerText}>o</Text>
+          <View style={styles.dividerLine} />
+        </View>
+        {google.error ? <Notice>{google.error}</Notice> : null}
+        <AppButton
+          title="Continuar con Google"
+          variant="secondary"
+          onPress={google.signIn}
+          loading={google.loading}
+          disabled={loading}
         />
         <View style={styles.bottom}>
           <Text style={styles.helper}>¿Aún no tienes tu cuenta?</Text>
@@ -98,6 +125,9 @@ const styles = StyleSheet.create({
   },
   title: { color: colors.coffeeDark, fontFamily: "serif", fontSize: 34 },
   subtitle: { marginTop: -10, color: colors.muted, fontSize: 14, lineHeight: 20 },
+  divider: { flexDirection: "row", alignItems: "center", gap: 10 },
+  dividerLine: { flex: 1, height: 1, backgroundColor: colors.line },
+  dividerText: { color: colors.muted, fontSize: 12 },
   bottom: { alignItems: "center", gap: 1, paddingTop: 4 },
   helper: { color: colors.muted, fontSize: 13 },
 });

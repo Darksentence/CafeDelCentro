@@ -1,4 +1,4 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { onAuthStateChanged } from "firebase/auth";
 import {
   createContext,
   useCallback,
@@ -8,21 +8,25 @@ import {
   useState,
   type PropsWithChildren,
 } from "react";
+import { auth } from "@/config/firebase";
+import {
+  calcularPuntos,
+  ensureUserProfile,
+  obtenerPedidos,
+} from "@/services/firestore";
+import { cerrarSesionFirebase } from "@/services/firebaseAuth";
 import type { ItemCarrito, Producto, Usuario } from "@/types";
-
-const SESSION_KEY = "cafe-del-centro:usuario";
 
 type SessionValue = {
   usuario: Usuario | null;
   cargandoSesion: boolean;
   carrito: ItemCarrito[];
   cantidadEnCarrito: number;
-  iniciarSesionLocal: (usuario: Usuario) => Promise<void>;
+  refrescarUsuario: () => Promise<void>;
   cerrarSesion: () => Promise<void>;
   agregarAlCarrito: (producto: Producto, tamano: string) => void;
   cambiarCantidad: (productoId: number, tamano: string, delta: number) => void;
   vaciarCarrito: () => void;
-  actualizarPuntos: (puntos: number) => Promise<void>;
 };
 
 const SessionContext = createContext<SessionValue | null>(null);
@@ -32,31 +36,50 @@ export function SessionProvider({ children }: PropsWithChildren) {
   const [cargandoSesion, setCargandoSesion] = useState(true);
   const [carrito, setCarrito] = useState<ItemCarrito[]>([]);
 
+  const sincronizarUsuario = useCallback(async () => {
+    const firebaseUser = auth.currentUser;
+    if (!firebaseUser) {
+      setUsuario(null);
+      return;
+    }
+
+    const profile = await ensureUserProfile(firebaseUser);
+    const pedidos = await obtenerPedidos(firebaseUser.uid, profile.rol === "admin");
+    setUsuario({ ...profile, puntos: calcularPuntos(pedidos) });
+  }, []);
+
   useEffect(() => {
     let mounted = true;
-
-    AsyncStorage.getItem(SESSION_KEY)
-      .then((stored) => {
-        if (stored && mounted) setUsuario(JSON.parse(stored) as Usuario);
-      })
-      .catch(() => AsyncStorage.removeItem(SESSION_KEY))
-      .finally(() => {
-        if (mounted) setCargandoSesion(false);
-      });
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      void (async () => {
+        try {
+          if (!firebaseUser) {
+            if (mounted) setUsuario(null);
+            return;
+          }
+          const profile = await ensureUserProfile(firebaseUser);
+          const pedidos = await obtenerPedidos(
+            firebaseUser.uid,
+            profile.rol === "admin"
+          );
+          if (mounted) setUsuario({ ...profile, puntos: calcularPuntos(pedidos) });
+        } catch {
+          await cerrarSesionFirebase().catch(() => undefined);
+          if (mounted) setUsuario(null);
+        } finally {
+          if (mounted) setCargandoSesion(false);
+        }
+      })();
+    });
 
     return () => {
       mounted = false;
+      unsubscribe();
     };
   }, []);
 
-  const iniciarSesionLocal = useCallback(async (nuevoUsuario: Usuario) => {
-    await AsyncStorage.setItem(SESSION_KEY, JSON.stringify(nuevoUsuario));
-    setUsuario(nuevoUsuario);
-  }, []);
-
   const cerrarSesion = useCallback(async () => {
-    await AsyncStorage.removeItem(SESSION_KEY);
-    setUsuario(null);
+    await cerrarSesionFirebase();
     setCarrito([]);
   }, []);
 
@@ -104,17 +127,6 @@ export function SessionProvider({ children }: PropsWithChildren) {
   );
 
   const vaciarCarrito = useCallback(() => setCarrito([]), []);
-
-  const actualizarPuntos = useCallback(
-    async (puntos: number) => {
-      if (!usuario) return;
-      const actualizado = { ...usuario, puntos };
-      await AsyncStorage.setItem(SESSION_KEY, JSON.stringify(actualizado));
-      setUsuario(actualizado);
-    },
-    [usuario]
-  );
-
   const cantidadEnCarrito = carrito.reduce(
     (total, item) => total + item.cantidad,
     0
@@ -126,24 +138,22 @@ export function SessionProvider({ children }: PropsWithChildren) {
       cargandoSesion,
       carrito,
       cantidadEnCarrito,
-      iniciarSesionLocal,
+      refrescarUsuario: sincronizarUsuario,
       cerrarSesion,
       agregarAlCarrito,
       cambiarCantidad,
       vaciarCarrito,
-      actualizarPuntos,
     }),
     [
       usuario,
       cargandoSesion,
       carrito,
       cantidadEnCarrito,
-      iniciarSesionLocal,
+      sincronizarUsuario,
       cerrarSesion,
       agregarAlCarrito,
       cambiarCantidad,
       vaciarCarrito,
-      actualizarPuntos,
     ]
   );
 

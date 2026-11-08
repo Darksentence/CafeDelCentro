@@ -10,7 +10,10 @@ import {
   Surface,
 } from "@/components/ui";
 import { useSession } from "@/context/SessionContext";
-import { actualizarEstadoPedido, obtenerPedidos } from "@/services/api";
+import {
+  actualizarEstadoPedido,
+  obtenerPedidos,
+} from "@/services/firestore";
 import { colors } from "@/theme";
 import type { Pedido } from "@/types";
 
@@ -34,7 +37,7 @@ export default function OrdersTab() {
   const { usuario } = useSession();
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [loading, setLoading] = useState(true);
-  const [updatingId, setUpdatingId] = useState<number | null>(null);
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [error, setError] = useState("");
 
   const cargar = useCallback(async () => {
@@ -43,7 +46,7 @@ export default function OrdersTab() {
     setError("");
     try {
       setPedidos(
-        await obtenerPedidos(usuario.rol === "admin" ? undefined : usuario.id)
+        await obtenerPedidos(usuario.id, usuario.rol === "admin")
       );
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "No pudimos encontrar tus pedidos. Prueba de nuevo.");
