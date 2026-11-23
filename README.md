@@ -23,7 +23,7 @@ La gestión manual de pedidos y la falta de un historial accesible pueden dificu
 | Documentación complementaria | [Documento en OneDrive](https://1drv.ms/w/c/2c4431c3aec74789/IQBvSHgTzLGnTYhV34YC_ly3AbI1JInwK_kRbpse_uvFmQY?e=o4kfTN) |
 | Video de demostración | [Ver video en YouTube](https://youtu.be/oodoMb9COwE?feature=shared) |
 | Integración Firebase  |https://console.firebase.google.com/project/cafedelcentro/overview|
-| Licencia Creative Commons | |
+| Licencia Creative Commons |https://github.com/Darksentence/CafeDelCentro/blob/main/LICENSE |
 
 ## 3. Arquitectura multiplataforma
 
