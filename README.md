@@ -1,12 +1,7 @@
-# ☕ Café del Centro
+# Café del Centro
 
 **Proyecto de cátedra — Entrega Final Multiplataforma**  
-**Tecnologías:** React · Next.js · React Native · Expo · Firebase Authentication · Cloud Firestore  
-**Evaluación:** 30 % (20 % entrega + 10 % defensa)  
-**Entrega:** domingo 22 de noviembre de 2026, 11:00 p. m.  
-**Defensas:** 23 al 27 de noviembre de 2026
-
-> **Estado de verificación:** Este README documenta las funciones descritas en los avances del proyecto. Antes de la entrega, el equipo debe comprobar el despliegue en Vercel, el funcionamiento en dispositivos móviles, las reglas de seguridad y los enlaces pendientes. La documentación no sustituye las pruebas de funcionamiento.
+**Tecnologías:** React · Next.js · React Native · Expo · Firebase Authentication · Cloud Firestore   
 
 ## 1. Descripción del proyecto
 
@@ -22,17 +17,17 @@ La gestión manual de pedidos y la falta de un historial accesible pueden dificu
 
 | Recurso | Enlace o estado |
 | --- | --- |
-| Repositorio público de GitHub | **PENDIENTE:** agregar URL del repositorio |
-| Aplicación web desplegada en Vercel | **PENDIENTE:** agregar URL de producción y verificar funcionamiento |
-| Prototipo y mockups de Figma (Etapa 1) | **PENDIENTE:** agregar URL pública o imágenes en `docs/mockups/` |
+| Repositorio de GitHub : | https://github.com/Darksentence/CafeDelCentro |
+| Aplicación web desplegada en Vercel : | https://cafe-del-centro-pya9.vercel.app/login |
+| Prototipo y mockups de Figma (Etapa 1) |https://www.figma.com/proto/WcpCQgZSYKtXfmcroyKasO/vistas-mobil?node-id=22-341&p=f&t=21rn7haXBjiyq7vr-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1 |
 | Documentación complementaria | [Documento en OneDrive](https://1drv.ms/w/c/2c4431c3aec74789/IQBvSHgTzLGnTYhV34YC_ly3AbI1JInwK_kRbpse_uvFmQY?e=o4kfTN) |
 | Video de demostración | [Ver video en YouTube](https://youtu.be/oodoMb9COwE?feature=shared) |
-| Integración Firebase — Etapa 3, Foro 2 | [`docs/ETAPA3_FORO2.md`](docs/ETAPA3_FORO2.md) |
-| Licencia Creative Commons | **PENDIENTE:** incorporar archivo `LICENSE` y elegir condiciones de licencia |
+| Integración Firebase  |https://console.firebase.google.com/project/cafedelcentro/overview|
+| Licencia Creative Commons | |
 
 ## 3. Arquitectura multiplataforma
 
-```text
+
 Café del Centro
 ├── Aplicación web: React + Next.js
 │   ├── Catálogo y navegación
@@ -46,7 +41,7 @@ Café del Centro
 └── Servicios compartidos: Firebase
     ├── Authentication: correo y Google
     └── Cloud Firestore: perfiles y pedidos
-```
+`
 
 La aplicación web y la móvil comparten datos a través de Firestore. La API de Next.js se conserva para el catálogo heredado y la compatibilidad con etapas anteriores; **no debe confundirse su almacenamiento en memoria con la persistencia compartida de Firebase**.
 
@@ -169,7 +164,7 @@ Las siguientes rutas se conservan por compatibilidad con etapas anteriores. La a
 
 El diseño visual busca mantener coherencia entre la experiencia web y móvil, con navegación comprensible, menú organizado, carrito, seguimiento de pedidos y perfil.
 
-**Mockups de la Etapa 1 — pendientes de publicar:**
+**Mockups de la Etapa 1 
 
 - [ ] Insertar enlace público de Figma en la sección 2.
 - [ ] Exportar las pantallas aprobadas y guardarlas en `docs/mockups/`.
@@ -182,8 +177,6 @@ Ejemplo de inserción una vez añadido el archivo real al repositorio:
 ![Mockup del menú de Café del Centro](docs/mockups/menu.png)
 ```
 
-No se incluyen imágenes ficticias ni enlaces inexistentes.
-
 ## 9. Despliegue web en Vercel
 
 1. Subir el código al repositorio público de GitHub.
@@ -192,8 +185,6 @@ No se incluyen imágenes ficticias ni enlaces inexistentes.
 4. Revisar dominios autorizados y configuración OAuth de Firebase para la URL de producción.
 5. Ejecutar el despliegue y comprobar inicio de sesión, catálogo, pedidos, historial y administración.
 6. Publicar la URL verificada en la sección 2.
-
-**Estado:** No se ha proporcionado una URL de Vercel ni evidencia de despliegue; este paso queda pendiente de confirmación.
 
 ## 10. Pruebas y validación
 
@@ -215,7 +206,6 @@ npx expo export --platform android
 npx expo export --platform web
 ```
 
-> Los comandos anteriores son comprobaciones sugeridas según los scripts documentados. Ejecutarlos y registrar sus resultados antes de afirmar que las compilaciones son exitosas. Una exportación de Expo no equivale por sí sola a una prueba de instalación nativa.
 
 ### 10.2. Lista de pruebas funcionales
 
@@ -233,16 +223,17 @@ npx expo export --platform web
 - [ ] Las pantallas muestran estados de carga, error y contenido vacío.
 - [ ] El diseño final se corresponde con los mockups de la Etapa 1.
 
-**Evidencias recomendadas:** capturas de las dos plataformas, consola de Firestore, pruebas de autenticación, historial de Git y video de demostración. Marcar las casillas únicamente después de verificar cada punto.
 
-## 11. Organización del equipo y repositorio GitHub
+## 11. Integrantes
+ 
 
-El repositorio de entrega debe ser **público**. Cada estudiante debe figurar como colaborador, contar con una rama propia y registrar commits reales, descriptivos y verificables. La ausencia de colaboración y commits tiene consecuencias directas en la evaluación.
+Rebeca Sarai Flores De Tejada - FD253107 
 
-| Integrante | Usuario GitHub | Rama individual | Módulos / responsabilidades |
-| --- | --- | --- | --- |
-| **PENDIENTE** | **PENDIENTE** | **PENDIENTE** | **PENDIENTE** |
-| **PENDIENTE** | **PENDIENTE** | **PENDIENTE** | **PENDIENTE** |
+Eduardo Ezequiel Amaya Montano – AM210570 
+
+Henry Beisson Chacon Garcia – CG253400 
+
+Giovanni Manuel Quijano Sosa - QS242538 
 
 Flujo de trabajo recomendado:
 
@@ -252,8 +243,6 @@ Flujo de trabajo recomendado:
 4. Abrir solicitudes de integración (pull requests) y revisar los cambios.
 5. Integrar el trabajo aprobado y verificar la aplicación completa.
 6. Conservar evidencia del historial de contribuciones y la participación de todos.
-
-No se deben atribuir commits ni responsabilidades que no estén respaldados por el repositorio.
 
 ## 12. Licencia Creative Commons
 
@@ -267,23 +256,18 @@ También deben respetarse las licencias de bibliotecas, imágenes, iconos y otro
 
 | Requisito | Evidencia / estado documental |
 | --- | --- |
-| 1. Web React + Next.js desplegada en Vercel | Arquitectura e instrucciones documentadas; **URL y despliegue por verificar**. |
-| 2. Móvil React Native con Firebase | Configuración y funciones descritas; **ejecución final por verificar**. |
-| 3. Autenticación por correo y redes sociales | Firebase Email/Password y Google documentados; **probar en ambas plataformas**. |
-| 4. Módulos principales y secundarios | Inventario de funcionalidades en sección 4; **validar cada flujo**. |
-| 5. Firestore compartido | Persistencia de perfiles y pedidos descrita; **validar lectura/escritura cruzada**. |
-| 6. UX/UI coherente con Figma | Criterios descritos; **comparación visual pendiente**. |
-| 7. Mockups publicados en README | **Pendiente:** enlace e imágenes reales. |
-| 8. Licencia Creative Commons | **Pendiente:** archivo `LICENSE` y alcance. |
-| 9. GitHub público, ramas, colaboradores y commits | Requisitos y flujo documentados; **evidencias pendientes**. |
-| 10. Originalidad del proyecto | El equipo debe verificar autoría y diferenciación del código y los diseños. |
-
+| 1. Web React + Next.js desplegada en Vercel | Arquitectura e instrucciones documentadas
+| 2. Móvil React Native con Firebase | Configuración y funciones descritas; 
+| 3. Autenticación por correo y redes sociales |
+| 4. Módulos principales y secundarios 
+| 5. Firestore compartido |
+| 6. UX/UI coherente con Figma | 
+| 7. Mockups publicados en README | 
+| 8. Licencia Creative Commons | archivo `LICENSE` y alcance. |
+| 9. GitHub público, ramas, colaboradores y commits | 
+| 10. Originalidad del proyecto | 
 ## 14. Defensa del proyecto
 
-Durante la defensa, demostrar un recorrido de extremo a extremo: iniciar sesión, consultar el menú, añadir productos al carrito, registrar un pedido, comprobarlo en Firestore, consultarlo desde la otra plataforma y actualizar su estado con una cuenta administrativa. Explicar las decisiones de arquitectura, las reglas de seguridad, la coherencia UX/UI y las contribuciones individuales.
-
-**Periodo de defensas:** del 23 al 27 de noviembre de 2026.  
-**Entrega:** enlace al repositorio público mediante Aula Digital, hasta el 22 de noviembre de 2026 a las 11:00 p. m.
 
 ## 15. Referencias académicas
 
@@ -291,4 +275,4 @@ Román Gallardo, A., Flores Cortés, C. A., & Herrera Morales, J. R. (s. f.). *P
 
 ---
 
-**Café del Centro — Proyecto académico multiplataforma.** La versión final debe reflejar únicamente funciones, enlaces, licencias y contribuciones efectivamente implementados y comprobados.
+**Café del Centro — Proyecto académico multiplataforma.** 
